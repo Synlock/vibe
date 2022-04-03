@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
+import 'package:vibe/tags.dart';
 import 'package:vibe/view/appBar.dart';
 import 'package:vibe/view/buttonStyles.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
@@ -17,15 +18,15 @@ class _SavedAlertsState extends State<SavedAlerts> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      initAlertsList();
-      if (alertBtnsWidgets.length >= getAlerts()!.length) return;
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      await initAlertsList();
       addAlertsToPage();
     });
   }
 
   List<Widget> addAlertsToPage() {
     for (var item in getAlerts()!) {
+      if (alertBtnsWidgets.length >= getAlerts()!.length) break;
       alertBtnsWidgets.add(AlertButton(alertName: item.alertName));
     }
     setState(() {});
@@ -35,7 +36,7 @@ class _SavedAlertsState extends State<SavedAlerts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar("Saved Alerts"),
+      appBar: mainAppBar(SAVED_ALERTS),
       body: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,

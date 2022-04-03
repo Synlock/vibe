@@ -1,6 +1,6 @@
 import 'package:just_audio/just_audio.dart' as audio_player;
 import 'package:flutter/material.dart';
-import 'package:vibe/commonCallbacks.dart';
+import 'package:vibe/commonCalls.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/appBar.dart';
 import 'package:vibe/view/audioRecorder.dart';

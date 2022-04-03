@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vibe/commonCallbacks.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/buttonStyles.dart';
-import 'package:vibe/view/savedAlerts.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class SaveNewAlertBox extends StatefulWidget {
@@ -17,7 +15,8 @@ class SaveNewAlertBox extends StatefulWidget {
 class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
   TextEditingController nameController = TextEditingController();
   CategoryData selectedCategory = CategoryData(
-      getCategories()![0].categoryId, getCategories()![0].categoryName);
+      categoryId: getCategories()![0].categoryId,
+      categoryName: getCategories()![0].categoryName);
 
   @override
   Widget build(BuildContext context) {

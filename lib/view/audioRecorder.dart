@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:path/path.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
+import 'package:vibe/commonCalls.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/saveNewAlertDialog.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
-import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class AudioRecorder extends StatefulWidget {
   const AudioRecorder({Key? key}) : super(key: key);
@@ -50,7 +48,11 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
   Future<void> stopRecording() async {
     final path = await record.stop();
-    print(path);
+
+    populateAlertsList(path);
+
+    File jsonFile = await getAlertsJsonFile();
+    writeAlertsJson(jsonFile);
   }
 
   void executeStopWatch(
@@ -82,41 +84,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
     );
   }
 
-  //add new savefile to list of saved audios
-  //convert to json on disk*
-  int alertIndex = 0;
   Future<bool> saveAudio(String fileName) async {
     try {
       File saveFile = File(getPathToRecordings() + "/$fileName");
       if (!await saveFile.exists()) {
         saveFile.create();
       }
-
-      // Directory directory = Directory(getPathToRecordings());
-      // String fullFileName = basename(saveFile.path);
-      // //Duration? duration = await audioPlayer.setUrl(directory.path);
-
-      // if (getAlerts()!.isEmpty) {
-      //   getAlerts()!.add(AlertData(0, fileName, getCategories()![0], "0"));
-      // } else {
-      //   for (var i = alertIndex; i < directory.listSync().length; i++) {
-      //     //if (getAlerts()![i].alertId == i) continue;
-
-      //     alertIndex++;
-      //     getAlerts()!.add(AlertData(i, fileName, getCategories()![0], "0"));
-
-      //     // print("""
-      //     // ID = ${getAlerts()![i].alertId}
-      //     // Name = ${getAlerts()![i].alertName}
-      //     // """);
-      //   }
-      // }
-      // for (var item in getAlerts()!) {
-      //   print("""
-      //   ID = ${item.alertId}
-      //   Name = ${item.alertName}
-      //   """);
-      // }
       startRecording(saveFile.path);
     } catch (e) {
       print(e);

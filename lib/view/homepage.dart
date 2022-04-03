@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:vibe/commonCallbacks.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
+import 'package:vibe/commonCalls.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/addNewAlert.dart';
 import 'package:vibe/view/buttonStyles.dart';
@@ -25,15 +24,16 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      getPermissions();
-      setDirectory();
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      await getPermissions();
+      await setRecordingsDirectory();
       initCategoryList();
     });
   }
 
   //TODO: move all this to end of splash screen
-  void getPermissions() async {
+  //TODO: make sure recording directory is created on first app run
+  Future<void> getPermissions() async {
     await requestPermission(Permission.microphone);
     if (Platform.isAndroid) {
       await requestPermission(Permission.storage);
@@ -42,7 +42,7 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  Future<bool> setDirectory() async {
+  Future<bool> setRecordingsDirectory() async {
     Directory directory;
     try {
       if (Platform.isAndroid) {
@@ -78,18 +78,6 @@ class _HomepageState extends State<Homepage> {
     } catch (e) {
       print(e);
       return false;
-    }
-    return false;
-  }
-
-  Future<bool> requestPermission(Permission permission) async {
-    if (await permission.isGranted) {
-      return true;
-    } else {
-      var result = await permission.request();
-      if (result == PermissionStatus.granted) {
-        return true;
-      }
     }
     return false;
   }
