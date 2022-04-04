@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
@@ -49,9 +47,8 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
                 style: mainButtonTextStyle(),
               ),
               onPressed: () async {
-                //TODO: add Save Function
-                await setAlertData(
-                    nameController, selectedCategory.categoryName, audioPlayer);
+                await setAlertData(nameController.text,
+                    selectedCategory.categoryName, audioPlayer);
                 Navigator.pop(context);
                 handleNewRoute(context, const SavedAlerts());
               },
@@ -63,8 +60,9 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
                 CANCEL,
                 style: mainButtonTextStyle(),
               ),
-              onPressed: () {
-                //create another popup with confirm delete
+              onPressed: () async {
+                //TODO: create another popup with confirm delete
+                await setAlertData(NEW_RECORDING_NAME, DEFAULT, audioPlayer);
                 Navigator.pop(context);
               },
               style: mainButtonStyle(),
@@ -94,12 +92,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
         const Text("$CATEGORY:"),
         DropdownButton<CategoryData>(
           value: dropdownValue,
-          items: getCategories()!
-              .map((e) => DropdownMenuItem<CategoryData>(
-                    child: Text(e.categoryName),
-                    value: e,
-                  ))
-              .toList(),
+          items: getCategoryDropdown(),
           onChanged: (CategoryData? newValue) {
             setState(() {
               dropdownValue = newValue!;
@@ -109,6 +102,15 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
         ),
       ],
     );
+  }
+
+  List<DropdownMenuItem<CategoryData>> getCategoryDropdown() {
+    return getCategories()!
+        .map((e) => DropdownMenuItem<CategoryData>(
+              child: Text(e.categoryName),
+              value: e,
+            ))
+        .toList();
   }
 }
 

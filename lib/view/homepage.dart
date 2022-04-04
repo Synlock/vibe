@@ -29,7 +29,7 @@ class _HomepageState extends State<Homepage> {
       await setRecordingsDirectory();
       initCategoryList();
       await initAlertsList();
-      populateAlertsList("fakePath");
+      await populateAlertsList("fakePath");
     });
   }
 

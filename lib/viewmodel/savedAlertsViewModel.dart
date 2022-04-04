@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibe/commonCalls.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
@@ -27,10 +26,11 @@ Future<void> initAlertsList() async {
 }
 
 //TODO: fix if delete file cannot record anymore, problem when getting files in directory to JSON
-Future<void> setAlertData(TextEditingController nameController,
-    String categoryName, AudioPlayer audioPlayer) async {
-  AlertData alertToChange = getAlerts()![getAlerts()!.length - 1];
-  String newName = nameController.text;
+Future<void> setAlertData(
+    String alertName, String categoryName, AudioPlayer audioPlayer) async {
+  AlertData alertToChange =
+      getAlerts()![getAlerts()!.isNotEmpty ? getAlerts()!.length - 1 : 0];
+  String newName = alertName;
   String newCategory = categoryName;
   Duration? duration = await audioPlayer.setUrl(alertToChange.alertPath);
 

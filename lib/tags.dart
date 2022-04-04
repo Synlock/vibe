@@ -26,3 +26,9 @@ const String ALERTS_JSON_FILE_NAME = "alertsJson.json";
 
 //Misc
 const String CATEGORY = "Category";
+const String DEFAULT = "Default";
+const String ADD_NEW_ALERT_INSTRUCTION_TEXT = """
+Lorem ipsum dolor 
+sit amet, consectetur 
+adipiscing elit.
+""";
