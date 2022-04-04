@@ -117,7 +117,7 @@ class _AudioRecorderState extends State<AudioRecorder> {
     executeStopWatch(stopWatchTimer, StopWatchExecute.start);
 
     //Saves new recording
-    saveAudio(numberOfFiles.toString() + NEW_RECORDING_NAME);
+    saveAudio(numberOfFiles.toString());
 
     //Recorder button turns into square
     setRecordButtonColor(Colors.black);

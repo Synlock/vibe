@@ -3,7 +3,8 @@ import 'package:vibe/commonCalls.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/appBar.dart';
-import 'package:vibe/view/buttonStyles.dart';
+import 'package:vibe/view/styles.dart';
+import 'package:vibe/view/sound.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -22,8 +23,6 @@ class _SavedAlertsState extends State<SavedAlerts> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       addAlertsToPage(alertBtnsWidgets);
-      print(getAlerts()!.length);
-      print(alertBtnsWidgets.length);
     });
   }
 
@@ -65,7 +64,7 @@ class AlertButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: handleNewRoute(context, const SoundPage()),
         child: Text(alertName, style: mainButtonTextStyle()),
         style: mainButtonStyle(),
       ),

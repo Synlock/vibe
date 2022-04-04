@@ -4,7 +4,7 @@ import 'package:vibe/commonCalls.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/appBar.dart';
 import 'package:vibe/view/audioRecorder.dart';
-import 'package:vibe/view/buttonStyles.dart';
+import 'package:vibe/view/styles.dart';
 import 'package:vibe/view/savedAlerts.dart';
 
 class AddNewAlert extends StatefulWidget {

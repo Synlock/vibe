@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
-import 'package:vibe/view/buttonStyles.dart';
+import 'package:vibe/view/styles.dart';
+import 'package:vibe/view/savedAlerts.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
+
+import '../commonCalls.dart';
 
 class SaveNewAlertBox extends StatefulWidget {
   const SaveNewAlertBox({Key? key}) : super(key: key);
@@ -17,6 +23,7 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
   CategoryData selectedCategory = CategoryData(
       categoryId: getCategories()![0].categoryId,
       categoryName: getCategories()![0].categoryName);
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +48,12 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
                 SAVE,
                 style: mainButtonTextStyle(),
               ),
-              onPressed: () {
+              onPressed: () async {
                 //TODO: add Save Function
-                //nameController.text; << value of alert name input
-                //selectedCategory.categoryName; << value of selected category
-                //handleNewRoute(context, const SavedAlerts());
+                await setAlertData(
+                    nameController, selectedCategory.categoryName, audioPlayer);
+                Navigator.pop(context);
+                handleNewRoute(context, const SavedAlerts());
               },
               style: mainButtonStyle(),
             ),
@@ -83,7 +91,7 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text("Category:"),
+        const Text("$CATEGORY:"),
         DropdownButton<CategoryData>(
           value: dropdownValue,
           items: getCategories()!

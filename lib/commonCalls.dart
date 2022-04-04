@@ -61,7 +61,7 @@ Future<File> getJsonFile(String fileName) async {
 
   //TODO: fix temporarily fill json with content to prevent decode error
   String contents =
-      '[{"alertId":0,"alertName":"0 - New Recording","alertCategory":"Default","alertDuration":0}]';
+      '[{"alertId":0,"alertName":"0 - New Recording","alertCategory":"Default","alertDuration":0, "alertPath":""}]';
 
   //TODO: need to call this on application start
   if (!await jsonFile.exists()) {
@@ -75,7 +75,6 @@ Future<File> getJsonFile(String fileName) async {
 Future<void> encodeJson(
     File jsonFile, dynamic objectToEncode, FileMode mode) async {
   String encodedJson = jsonEncode(objectToEncode);
-  //jsonEncode(getAlerts()!.map((e) => e.toJson()).toList());
 
   await jsonFile.writeAsString(encodedJson, mode: mode);
 }

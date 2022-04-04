@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:vibe/commonCalls.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/addNewAlert.dart';
-import 'package:vibe/view/buttonStyles.dart';
+import 'package:vibe/view/styles.dart';
 import 'package:vibe/view/savedAlerts.dart';
 import 'package:vibe/view/settings.dart';
 import 'package:vibe/view/appBar.dart';
@@ -29,7 +29,7 @@ class _HomepageState extends State<Homepage> {
       await setRecordingsDirectory();
       initCategoryList();
       await initAlertsList();
-      populateAlertsList("path");
+      populateAlertsList("fakePath");
     });
   }
 
@@ -88,33 +88,97 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: mainAppBar("Vibe"),
+      backgroundColor: indigoColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: handleNewRoute(context, const AddNewAlert()),
-              child: Text(
-                ADD_NEW_ALERT,
-                style: mainButtonTextStyle(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Stack(
+                  alignment: AlignmentDirectional.centerStart,
+                  fit: StackFit.expand,
+                  children: [
+                    ElevatedButton(
+                      onPressed: handleNewRoute(context, const AddNewAlert()),
+                      child: Text(
+                        ADD_NEW_ALERT,
+                        style: homepageButtonTextStyle(),
+                      ),
+                      style: homepageButtonStyle(),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Icon(
+                          Icons.mic_rounded,
+                          size: iconSize,
+                          color: yellowColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              style: mainButtonStyle(),
             ),
-            ElevatedButton(
-              onPressed: handleNewRoute(context, const SavedAlerts()),
-              child: Text(
-                SAVED_ALERTS,
-                style: mainButtonTextStyle(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Stack(
+                  alignment: AlignmentDirectional.centerStart,
+                  fit: StackFit.expand,
+                  children: [
+                    ElevatedButton(
+                      onPressed: handleNewRoute(context, const SavedAlerts()),
+                      child: Text(
+                        SAVED_ALERTS,
+                        style: homepageButtonTextStyle(),
+                      ),
+                      style: homepageButtonStyle(),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Icon(
+                          Icons.library_music,
+                          size: iconSize,
+                          color: yellowColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              style: mainButtonStyle(),
             ),
-            ElevatedButton(
-              onPressed: handleNewRoute(context, const Settings()),
-              child: Text(
-                SETTINGS,
-                style: mainButtonTextStyle(),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Stack(
+                  alignment: AlignmentDirectional.centerStart,
+                  fit: StackFit.expand,
+                  children: [
+                    ElevatedButton(
+                      onPressed: handleNewRoute(context, const Settings()),
+                      child: Text(
+                        SETTINGS,
+                        style: homepageButtonTextStyle(),
+                      ),
+                      style: homepageButtonStyle(),
+                    ),
+                    Positioned.fill(
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Icon(
+                          Icons.settings,
+                          size: iconSize,
+                          color: yellowColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              style: mainButtonStyle(),
             ),
           ],
         ),

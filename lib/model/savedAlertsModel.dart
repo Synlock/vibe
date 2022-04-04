@@ -1,34 +1,38 @@
 import 'package:vibe/tags.dart';
 
 class AlertData {
-  final int alertId;
-  final String alertName;
-  final String alertCategory;
-  final int alertDuration;
+  int alertId;
+  String alertName;
+  String alertCategory;
+  int alertDuration;
+  String alertPath;
 
   AlertData(
       {required this.alertId,
       required this.alertName,
       required this.alertCategory,
-      required this.alertDuration});
+      required this.alertDuration,
+      required this.alertPath});
 
   AlertData.fromJson(Map<String, dynamic> json)
       : alertId = json[ALERT_ID] as int,
         alertName = json[ALERT_NAME] as String,
         alertCategory = json[ALERT_CATEGORY] as String,
-        alertDuration = json[ALERT_DURATION] as int;
+        alertDuration = json[ALERT_DURATION] as int,
+        alertPath = json[ALERT_PATH] as String;
 
   Map<String, dynamic> toJson() => {
         ALERT_ID: alertId,
         ALERT_NAME: alertName,
         ALERT_CATEGORY: alertCategory,
-        ALERT_DURATION: alertDuration
+        ALERT_DURATION: alertDuration,
+        ALERT_PATH: alertPath
       };
 }
 
 class CategoryData {
-  final int categoryId;
-  final String categoryName;
+  int categoryId;
+  String categoryName;
 
   CategoryData({
     required this.categoryId,
