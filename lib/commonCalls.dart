@@ -55,9 +55,9 @@ Future<Directory?> getPlatformDirectory() async {
   }
 }
 
-Future<File> getAlertsJsonFile() async {
+Future<File> getJsonFile(String fileName) async {
   Directory? mainDir = await getPlatformDirectory();
-  File jsonFile = File(mainDir!.path + "/" + "alertsList.json");
+  File jsonFile = File(mainDir!.path + "/" + fileName);
 
   //TODO: fix temporarily fill json with content to prevent decode error
   String contents =
@@ -72,15 +72,16 @@ Future<File> getAlertsJsonFile() async {
   return jsonFile;
 }
 
-void writeAlertsJson(File jsonFile) {
-  String alertsJson = jsonEncode(getAlerts()!.map((e) => e.toJson()).toList());
+Future<void> encodeJson(
+    File jsonFile, dynamic objectToEncode, FileMode mode) async {
+  String encodedJson = jsonEncode(objectToEncode);
+  //jsonEncode(getAlerts()!.map((e) => e.toJson()).toList());
 
-  jsonFile.openWrite().write(alertsJson);
-  jsonFile.openWrite().close();
+  await jsonFile.writeAsString(encodedJson, mode: mode);
 }
 
-Future<dynamic> decodedAlertsJson() async {
-  File jsonFile = await getAlertsJsonFile();
+Future<dynamic> getDecodedJson(String fileName) async {
+  File jsonFile = await getJsonFile(fileName);
   String jsonString = await jsonFile.readAsString();
   final json = jsonDecode(jsonString);
   return json;

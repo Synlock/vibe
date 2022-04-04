@@ -11,20 +11,22 @@ List<AlertData>? getAlerts() => alerts;
 List<CategoryData>? getCategories() => categories;
 
 Future<void> initAlertsList() async {
-  final json = await decodedAlertsJson();
+  final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
   print(json);
 
   Directory directory = Directory(getPathToRecordings());
-  for (var i = 0; i < directory.listSync().length; i++) {
-    if (alerts.length >= directory.listSync().length) break;
+  // for (var i = 0; i < directory.listSync().length; i++) {
+  //   if (alerts.length >= directory.listSync().length) break;
+  for (var i = 0; i < getAlerts()!.length; i++) {
+    if (i >= getAlerts()!.length) break;
 
     final item = json[i];
-    alerts.add(
+    getAlerts()!.add(
       AlertData(
-        alertId: item["alertId"],
-        alertName: item["alertName"],
-        alertCategory: item["alertCategory"],
-        alertDuration: item["alertDuration"],
+        alertId: item[ALERT_ID],
+        alertName: item[ALERT_NAME],
+        alertCategory: item[ALERT_CATEGORY],
+        alertDuration: item[ALERT_DURATION],
       ),
     );
   }

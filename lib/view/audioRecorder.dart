@@ -4,9 +4,11 @@ import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:vibe/commonCalls.dart';
+import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/saveNewAlertDialog.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
+import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class AudioRecorder extends StatefulWidget {
   const AudioRecorder({Key? key}) : super(key: key);
@@ -51,8 +53,12 @@ class _AudioRecorderState extends State<AudioRecorder> {
 
     populateAlertsList(path);
 
-    File jsonFile = await getAlertsJsonFile();
-    writeAlertsJson(jsonFile);
+    File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+    encodeJson(
+      jsonFile,
+      getAlerts()!.map((e) => e.toJson()).toList(),
+      FileMode.write,
+    );
   }
 
   void executeStopWatch(

@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:vibe/commonCalls.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
+import 'package:vibe/tags.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 import '../model/audioRecorderModel.dart';
@@ -44,7 +46,7 @@ void populateAlertsList(String? path) {
           alertCategory: getCategories()![0].categoryName,
           alertDuration: 0));
     } else {
-      if (alertIndex == getAlerts()![i].alertId) continue;
+      //if (alertIndex == getAlerts()![i].alertId) continue;
 
       getAlerts()!.add(AlertData(
           alertId: i,

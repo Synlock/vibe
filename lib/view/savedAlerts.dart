@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:vibe/commonCalls.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
 import 'package:vibe/view/appBar.dart';
 import 'package:vibe/view/buttonStyles.dart';
+import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class SavedAlerts extends StatefulWidget {
@@ -18,35 +20,34 @@ class _SavedAlertsState extends State<SavedAlerts> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      await initAlertsList();
-      addAlertsToPage();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      addAlertsToPage(alertBtnsWidgets);
+      print(getAlerts()!.length);
+      print(alertBtnsWidgets.length);
     });
   }
 
-  List<Widget> addAlertsToPage() {
-    for (var item in getAlerts()!) {
+  void addAlertsToPage(List<Widget> alertBtnsWidgets) {
+    for (AlertData alert in getAlerts()!) {
       if (alertBtnsWidgets.length >= getAlerts()!.length) break;
-      alertBtnsWidgets.add(AlertButton(alertName: item.alertName));
+
+      alertBtnsWidgets.add(AlertButton(alertName: alert.alertName));
     }
     setState(() {});
-    return alertBtnsWidgets;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: mainAppBar(SAVED_ALERTS),
-      body: Center(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              spacing: 120.0,
-              runSpacing: 10.0,
-              children: alertBtnsWidgets,
-            ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 50.0,
+            runSpacing: 10.0,
+            children: alertBtnsWidgets,
           ),
         ),
       ),
@@ -61,10 +62,13 @@ class AlertButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: Text(alertName, style: mainButtonTextStyle()),
-      style: mainButtonStyle(),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text(alertName, style: mainButtonTextStyle()),
+        style: mainButtonStyle(),
+      ),
     );
   }
 }

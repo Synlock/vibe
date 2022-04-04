@@ -28,6 +28,8 @@ class _HomepageState extends State<Homepage> {
       await getPermissions();
       await setRecordingsDirectory();
       initCategoryList();
+      await initAlertsList();
+      populateAlertsList("path");
     });
   }
 
