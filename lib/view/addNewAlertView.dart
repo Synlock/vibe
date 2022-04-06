@@ -4,11 +4,10 @@ import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:vibe/commonCalls.dart';
 import 'package:vibe/tags.dart';
-import 'package:vibe/view/appBar.dart';
-import 'package:vibe/view/audioRecorder.dart';
-import 'package:vibe/view/saveNewAlertDialog.dart';
-import 'package:vibe/view/styles.dart';
-import 'package:vibe/view/savedAlerts.dart';
+import 'package:vibe/styles/appBar.dart';
+import 'package:vibe/view/saveNewAlertPopupView.dart';
+import 'package:vibe/styles/styles.dart';
+import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 
 class AddNewAlert extends StatefulWidget {
@@ -76,11 +75,11 @@ class _AddNewAlertState extends State<AddNewAlert> {
     if (!getIsRecording()) return;
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      setState() {
+      setState(() {
         setRecordButtonColor(Colors.red);
         setRecordButtonBorderRadius(BorderRadius.circular(100));
         setIsRecording(false);
-      }
+      });
     });
   }
 
@@ -94,7 +93,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const Padding(
-              padding: EdgeInsets.only(bottom: 25.0),
+              padding: EdgeInsets.only(bottom: 0.0),
               child: Text(
                 ADD_NEW_ALERT_INSTRUCTION_TEXT,
                 style: TextStyle(
@@ -104,7 +103,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.all(25.0),
+              padding: EdgeInsets.only(bottom: 75.0),
               child: Icon(
                 Icons.touch_app,
                 color: Colors.white,
@@ -121,16 +120,18 @@ class _AddNewAlertState extends State<AddNewAlert> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.stop),
-                    onPressed: () {},
-                    iconSize: 50,
-                    color: Colors.grey,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    splashColor: Colors.transparent,
+                  Column(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.stop),
+                        onPressed: () {},
+                        iconSize: 50,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
-                  Expanded(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
                     child: Container(
                       width: 100,
                       height: 100,

@@ -59,14 +59,10 @@ Future<File> getJsonFile(String fileName) async {
   Directory? mainDir = await getPlatformDirectory();
   File jsonFile = File(mainDir!.path + "/" + fileName);
 
-  //TODO: fix temporarily fill json with content to prevent decode error
-  String contents =
-      '[{"alertId":0,"alertName":"0 - New Recording","alertCategory":"Default","alertDuration":0, "alertPath":""}]';
-
   //TODO: need to call this on application start
   if (!await jsonFile.exists()) {
     await jsonFile.create();
-    await jsonFile.writeAsString(contents);
+    await jsonFile.writeAsString("");
   }
 
   return jsonFile;

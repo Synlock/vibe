@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibe/view/homepage.dart';
+import 'package:vibe/view/homepageView.dart';
 
 void main() {
   runApp(const MyApp());

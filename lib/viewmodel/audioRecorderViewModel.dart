@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:vibe/commonCalls.dart';
 import 'package:vibe/model/audioRecorderModel.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
-import 'package:vibe/view/saveNewAlertDialog.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 int getMaxRecordTimeInSecs() => maxRecordTimeInSecs;
@@ -28,40 +26,6 @@ void setIsRecording(bool newIsRecording) => isRecording = newIsRecording;
 String getPathToRecordings() => pathToRecordings;
 void setPathToRecordings(String newPath) => pathToRecordings = newPath;
 
-int alertIndex = 0;
-Future<void> populateAlertsList(String? path) async {
-  final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-  Directory directory = Directory(getPathToRecordings());
-
-  FileSystemEntity fileInDirectory = File("");
-  for (var i = alertIndex; i < directory.listSync().length; i++) {
-    if (fileInDirectory.path == path) break;
-    fileInDirectory = directory.listSync()[i];
-
-    String fullFileName = basename(fileInDirectory.path);
-
-    if (getAlerts()!.isEmpty) {
-      getAlerts()!.add(AlertData(
-        alertId: json[0][ALERT_ID],
-        alertName: json[0][ALERT_NAME],
-        alertCategory: json[0][ALERT_CATEGORY],
-        alertDuration: json[0][ALERT_DURATION],
-        alertPath: fileInDirectory.path,
-      ));
-    } else {
-      final item = json[i];
-      getAlerts()!.add(AlertData(
-        alertId: item[ALERT_ID],
-        alertName: item[ALERT_NAME],
-        alertCategory: item[ALERT_CATEGORY],
-        alertDuration: item[ALERT_DURATION],
-        alertPath: fileInDirectory.path,
-      ));
-    }
-    alertIndex++;
-  }
-}
-
 Future<void> startRecording(Record record, String path) async {
   try {
     if (await record.hasPermission()) {
@@ -75,14 +39,32 @@ Future<void> startRecording(Record record, String path) async {
 Future<void> stopRecording(Record record) async {
   final path = await record.stop();
 
-  populateAlertsList(path);
-
   File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
-  encodeJson(
-    jsonFile,
-    getAlerts()!.map((e) => e.toJson()).toList(),
-    FileMode.write,
-  );
+  //if alerts list is empty temporarily populate list to avoid saving json as empty
+  if (getAlerts()!.isEmpty) {
+    //add temp data
+    getAlerts()!.add(AlertData(
+      alertId: 0,
+      alertName: "alertName",
+      alertCategory: "alertCategory",
+      alertDuration: 0,
+      alertPath: Directory(getPathToRecordings()).listSync()[0].path,
+      typeOfAlert: '',
+      isSilent: false,
+    ));
+    //save temp data to json
+    await encodeJson(
+      jsonFile,
+      getAlerts()!.map((e) => e.toJson()).toList(),
+      FileMode.write,
+    );
+  }
+
+  //populate list with temp data if list was empty
+  //otherwise populate list
+  await populateAlertsList(path);
+
+  //save new list to json
 }
 
 void executeStopWatch(StopWatchTimer stopWatchTimer, StopWatchExecute execute) {
@@ -116,7 +98,7 @@ void startRecord(StopWatchTimer stopWatchTimer, Record record) {
   executeStopWatch(stopWatchTimer, StopWatchExecute.start);
 
   //Saves new recording
-  saveAudio(record, numberOfFiles.toString());
+  saveAudio(record, "${numberOfFiles.toString()}.wav");
 
   //Recorder button turns into square
   setRecordButtonColor(Colors.black);

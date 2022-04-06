@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/tags.dart';
-import 'package:vibe/view/styles.dart';
-import 'package:vibe/view/savedAlerts.dart';
+import 'package:vibe/styles/styles.dart';
+import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
-
-import '../commonCalls.dart';
 
 class SaveNewAlertBox extends StatefulWidget {
   const SaveNewAlertBox({Key? key}) : super(key: key);
@@ -21,7 +18,7 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
   CategoryData selectedCategory = CategoryData(
       categoryId: getCategories()![0].categoryId,
       categoryName: getCategories()![0].categoryName);
-  AudioPlayer audioPlayer = AudioPlayer();
+  //AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +44,14 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
                 style: mainButtonTextStyle(),
               ),
               onPressed: () async {
-                await setAlertData(nameController.text,
-                    selectedCategory.categoryName, audioPlayer);
+                await setAlertData(
+                    nameController.text, selectedCategory.categoryName);
+
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SavedAlerts()),
+                );
                 Navigator.pop(context);
-                handleNewRoute(context, const SavedAlerts());
               },
               style: mainButtonStyle(),
             ),
@@ -62,7 +63,7 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
               ),
               onPressed: () async {
                 //TODO: create another popup with confirm delete
-                await setAlertData(NEW_RECORDING_NAME, DEFAULT, audioPlayer);
+                //await setAlertData(NEW_RECORDING_NAME, DEFAULT, audioPlayer);
                 Navigator.pop(context);
               },
               style: mainButtonStyle(),
