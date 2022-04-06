@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:vibe/commonCalls.dart';
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/commonCalls.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
@@ -88,86 +88,78 @@ class _AddNewAlertState extends State<AddNewAlert> {
     return Scaffold(
       appBar: mainAppBar(ADD_NEW_ALERT),
       backgroundColor: indigoColor,
-      body: SizedBox.expand(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 0.0),
-              child: Text(
-                ADD_NEW_ALERT_INSTRUCTION_TEXT,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
+            Container(
+              height: 130,
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 75.0),
-              child: Icon(
-                Icons.touch_app,
+            const Text(
+              ADD_NEW_ALERT_INSTRUCTION_TEXT,
+              style: TextStyle(
                 color: Colors.white,
-                size: 70,
+                fontSize: 20,
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 30.0),
-              child: displayStopWatch(stopWatchTimer, record),
+            const Icon(
+              Icons.touch_app,
+              color: Colors.white,
+              size: 70,
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 25.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Column(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.stop),
-                        onPressed: () {},
-                        iconSize: 50,
-                        color: Colors.grey,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.fiber_manual_record),
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onPressed: () {
-                          setIsRecording(!getIsRecording());
+            Container(
+              height: 100,
+            ),
+            displayStopWatch(stopWatchTimer, record),
+            Container(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.stop),
+                  onPressed: () {},
+                  iconSize: 50,
+                  color: Colors.grey,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.fiber_manual_record),
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onPressed: () {
+                        setIsRecording(!getIsRecording());
 
-                          setState(() {
-                            if (getIsRecording()) {
-                              startRecord(stopWatchTimer, record);
-                            } else {
-                              stopRecord(context, stopWatchTimer, record);
-                            }
-                          });
-                        },
-                        iconSize: 75,
-                        color: getRecordButtonColor(),
-                      ),
+                        setState(() {
+                          if (getIsRecording()) {
+                            startRecord(stopWatchTimer, record);
+                          } else {
+                            stopRecord(context, stopWatchTimer, record);
+                          }
+                        });
+                      },
+                      iconSize: 75,
+                      color: getRecordButtonColor(),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.insert_drive_file),
-                    onPressed: handleNewRoute(context, const SavedAlerts()),
-                    iconSize: 50,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.insert_drive_file),
+                  onPressed: handleNewRoute(context, const SavedAlerts()),
+                  iconSize: 50,
+                  color: Colors.white,
+                ),
+              ],
             ),
           ],
         ),

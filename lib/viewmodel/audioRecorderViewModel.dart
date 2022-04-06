@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:vibe/commonCalls.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/model/audioRecorderModel.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/tags.dart';
+import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 int getMaxRecordTimeInSecs() => maxRecordTimeInSecs;
@@ -46,7 +47,8 @@ Future<void> stopRecording(Record record) async {
     getAlerts()!.add(AlertData(
       alertId: 0,
       alertName: "alertName",
-      alertCategory: "alertCategory",
+      alertCategory: CategoryData(categoryName: DEFAULT),
+      alertIcon: getAlertIcons[3].codePoint,
       alertDuration: 0,
       alertPath: Directory(getPathToRecordings()).listSync()[0].path,
       typeOfAlert: '',

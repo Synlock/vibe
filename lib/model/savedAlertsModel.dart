@@ -1,18 +1,27 @@
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/tags.dart';
 
 class AlertData {
   int alertId;
   String alertName;
-  String alertCategory;
+  CategoryData alertCategory;
+  int alertIcon;
   int alertDuration;
   String alertPath;
   String typeOfAlert;
   bool isSilent;
 
+  @override
+  bool operator ==(Object other) =>
+      other is AlertData && other.alertIcon == alertIcon;
+
+  @override
+  int get hashCode => alertIcon.hashCode;
+
   AlertData({
     required this.alertId,
     required this.alertName,
     required this.alertCategory,
+    required this.alertIcon,
     required this.alertDuration,
     required this.alertPath,
     required this.typeOfAlert,
@@ -22,7 +31,8 @@ class AlertData {
   AlertData.fromJson(Map<String, dynamic> json)
       : alertId = json[ALERT_ID] as int,
         alertName = json[ALERT_NAME] as String,
-        alertCategory = json[ALERT_CATEGORY] as String,
+        alertCategory = json[ALERT_CATEGORY] as CategoryData,
+        alertIcon = json[ALERT_ICON] as int,
         alertDuration = json[ALERT_DURATION] as int,
         alertPath = json[ALERT_PATH] as String,
         typeOfAlert = json[TYPE_OF_ALERT] as String,
@@ -32,6 +42,7 @@ class AlertData {
         ALERT_ID: alertId,
         ALERT_NAME: alertName,
         ALERT_CATEGORY: alertCategory,
+        ALERT_ICON: alertIcon,
         ALERT_DURATION: alertDuration,
         ALERT_PATH: alertPath,
         TYPE_OF_ALERT: typeOfAlert,
@@ -40,21 +51,24 @@ class AlertData {
 }
 
 class CategoryData {
-  int categoryId;
   String categoryName;
 
+  @override
+  bool operator ==(Object other) =>
+      other is CategoryData && other.categoryName == categoryName;
+
+  @override
+  int get hashCode => categoryName.hashCode;
+
   CategoryData({
-    required this.categoryId,
     required this.categoryName,
   });
 
   CategoryData.fromJson(Map<String, dynamic> json)
-      : categoryId = json['categoryId'] as int,
-        categoryName = json['categoryName'] as String;
+      : categoryName = json[CATEGORY_NAME] as String;
 
   Map<String, dynamic> toJson() => {
-        'categoryId': categoryId,
-        'categoryName': categoryName,
+        CATEGORY_NAME: categoryName,
       };
 }
 

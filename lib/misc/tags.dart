@@ -11,25 +11,33 @@ const String ALERT = "Alert Settings";
 //Buttons
 const String SAVE = "Save";
 const String CANCEL = "Cancel";
+const String DELETE = "Delete";
 
 //Saved Alerts Model
 const String ALERT_ID = "alertId";
 const String ALERT_NAME = "alertName";
 const String ALERT_CATEGORY = "alertCategory";
+const String ALERT_ICON = "alertIcon";
 const String ALERT_DURATION = "alertDuration";
 const String ALERT_PATH = "alertPath";
 const String TYPE_OF_ALERT = "typeOfAlert";
 const String IS_SILENT = "isSilent";
+
+const String CATEGORY_NAME = "categoryName";
 
 //Alert Page UI
 const String TYPE_OF_ALERT_UI = "Type of alert";
 const String SILENCE_THIS_ALERT_UI = "Silence this alert";
 const String UPDATE_THIS_ALERT_UI = "Update this alert";
 const String CATEGORY_UI = "Category";
+const String RERECORD = "Rerecord";
+const String ALERT_ICON_UI = "Alert icon";
 
 //Types of Alert Functions
 const String VIBRATE = "Vibrate";
-const String RERECORD = "Rerecord";
+const String MEDIUM = "Medium";
+const String FLASHLIGHT_STROBE = "Flashlight strobe";
+const String BANNER = "Banner";
 
 //Settings Page UI
 const String SAVE_TO_CLOUD = "Save alerts to cloud";
@@ -48,6 +56,11 @@ const String SYNC_SUBTEXT = "Alerts will appear on other devices";
 //Prebuilt Categories
 const String HOME_CATEGORY_UI = "Home";
 const String EMERGENCY_CATEGORY_UI = "Emergency";
+
+//Popups
+const String ALERT_NAME_HINT = "Alert name";
+const String SAVE_NEW_ALERT = "Save new alert";
+const String UPDATE_ALERT = "Update alert";
 
 //File Management
 const String RECORDINGS_FOLDER_NAME = "Vibe Recordings";

@@ -1,4 +1,4 @@
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/tags.dart';
 
 handleMenuBtnItems(String value) {
   switch (value) {

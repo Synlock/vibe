@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/viewModel/appBarViewModel.dart';
 
 AppBar mainAppBar(String appBarText) {

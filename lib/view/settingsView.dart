@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/styles.dart';
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
 
 class Settings extends StatefulWidget {
@@ -105,13 +105,17 @@ class _SettingsState extends State<Settings> {
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 125.0),
-                child: roundedButton(SIGN_UP_SIGN_IN_TEXT),
+                child: roundedButton(
+                  () {},
+                  SIGN_UP_SIGN_IN_TEXT,
+                ),
               )
             ],
           ),
           Column(
             children: [
               alertButton(
+                () {},
                 DEFAULT_ALERT_TYPE,
                 VIBRATE, //<<make this arg dynamic
                 alertButtonTextStyle()!,

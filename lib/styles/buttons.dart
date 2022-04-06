@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibe/commonCalls.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/styles/styles.dart';
 
 Padding homepageButton(
@@ -32,8 +32,8 @@ Padding homepageButton(
       ),
     );
 
-//TODO: add on pressed to these buttons
 ElevatedButton alertButton(
+  VoidCallback onPressed,
   String mainText,
   String subText,
   TextStyle mainTextStyle,
@@ -41,31 +41,27 @@ ElevatedButton alertButton(
   ButtonStyle buttonStyle,
 ) =>
     ElevatedButton(
-      onPressed: () {},
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  mainText,
-                  style: mainTextStyle,
-                  textAlign: TextAlign.right,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    subText,
-                    style: subTextStyle,
-                    textAlign: TextAlign.right,
-                  ),
-                ),
-              ],
+      onPressed: onPressed,
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              mainText,
+              style: mainTextStyle,
+              textAlign: TextAlign.right,
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Text(
+                subText,
+                style: subTextStyle,
+                textAlign: TextAlign.right,
+              ),
+            ),
+          ],
+        ),
       ),
       style: buttonStyle,
     );
@@ -117,10 +113,11 @@ ElevatedButton toggleButton(
     );
 
 ElevatedButton roundedButton(
+  VoidCallback onPressed,
   String buttonText,
 ) =>
     ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: Text(
         buttonText,
         style: saveCloudTextStyle(),
@@ -128,10 +125,43 @@ ElevatedButton roundedButton(
       style: roundedButtonStyle(),
     );
 
+ElevatedButton miniRoundedButton(
+  VoidCallback onPressed,
+  String buttonText,
+) =>
+    ElevatedButton(
+      onPressed: onPressed,
+      child: Text(
+        buttonText,
+        style: mainButtonTextStyle(),
+      ),
+      style: miniRoundedButtonStyle(),
+    );
+
+ElevatedButton iconTextStackButton(
+        VoidCallback onPressed, String alertName, IconData icon) =>
+    ElevatedButton(
+      onPressed: onPressed,
+      child: Column(
+        children: [
+          Icon(
+            icon,
+            size: 100,
+            color: yellowColor,
+          ),
+          Text(
+            alertName,
+            style: homepageButtonTextStyle(),
+          ),
+        ],
+      ),
+      style: iconTextButtonStyle(),
+    );
+
 Divider divider() => const Divider(
-      height: 1,
-      thickness: 0.5,
+      height: 3,
+      thickness: 1,
       indent: 20,
       endIndent: 20,
-      color: Colors.black26,
+      color: Colors.black12,
     );

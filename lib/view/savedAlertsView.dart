@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:vibe/commonCalls.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
-import 'package:vibe/tags.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
@@ -32,7 +34,9 @@ class _SavedAlertsState extends State<SavedAlerts> {
     for (AlertData alert in getAlerts()!) {
       if (alertBtnsWidgets.length >= getAlerts()!.length) break;
 
-      alertBtnsWidgets.add(AlertButton(alertName: alert.alertName));
+      alertBtnsWidgets.add(AlertButton(
+        alertData: alert,
+      ));
     }
     setState(() {});
   }
@@ -68,29 +72,57 @@ class _SavedAlertsState extends State<SavedAlerts> {
 }
 
 //TODO: make icon dynamic based off of category
-class AlertButton extends StatelessWidget {
-  final String alertName;
+class AlertButton extends StatefulWidget {
+  final AlertData alertData;
 
-  const AlertButton({Key? key, required this.alertName}) : super(key: key);
+  const AlertButton({
+    Key? key,
+    required this.alertData,
+  }) : super(key: key);
+
+  @override
+  State<AlertButton> createState() => _AlertButtonState();
+}
+
+class _AlertButtonState extends State<AlertButton> {
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: ElevatedButton(
-        onPressed: handleNewRoute(context, const AlertSettings()),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AlertSettings(
+                alertId: widget.alertData.alertId,
+                alertName: widget.alertData.alertName,
+                alertIcon: IconData(widget.alertData.alertIcon,
+                    fontFamily: 'MaterialIcons'),
+                typeOfAlert: widget.alertData.typeOfAlert,
+                isSilenced: widget.alertData.isSilent,
+                alertCategory: widget.alertData.alertCategory,
+              ),
+            ),
+          ).then(onGoBack);
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-              alertName,
+              widget.alertData.alertName,
               style: mainButtonTextStyle(),
               textAlign: TextAlign.right,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 40.0),
               child: Icon(
-                Icons.access_alarm,
+                IconData(widget.alertData.alertIcon,
+                    fontFamily: 'MaterialIcons'),
                 size: 60,
                 color: indigoColor,
               ),
