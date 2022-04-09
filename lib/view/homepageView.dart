@@ -24,7 +24,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  MyMicStreamState micStream = MyMicStreamState();
+  StartMicStreamState micStream = StartMicStreamState();
   IconData icon = Icons.square_rounded;
   Color iconColor = Colors.black;
   @override
