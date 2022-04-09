@@ -41,6 +41,8 @@ dependencies:
   permission_handler: ^9.2.0
   just_audio: ^0.9.20
   path: ^1.8.0
+  move_to_background: ^1.0.2
+  mic_stream: ^0.6.0
 
 dev_dependencies:
   flutter_test:

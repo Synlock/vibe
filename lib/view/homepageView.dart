@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:move_to_background/move_to_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vibe/misc/commonCalls.dart';
@@ -12,6 +13,7 @@ import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
+import 'package:vibe/viewmodel/micStreamViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class Homepage extends StatefulWidget {
@@ -22,6 +24,9 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  MyMicStreamState micStream = MyMicStreamState();
+  IconData icon = Icons.square_rounded;
+  Color iconColor = Colors.black;
   @override
   void initState() {
     super.initState();
@@ -29,7 +34,8 @@ class _HomepageState extends State<Homepage> {
       await getPermissions();
       await setRecordingsDirectory();
       initCategoryList();
-
+      micStream.isRecording = true;
+      micStream.controlMicStream(command: Command.start);
       Directory recordingsDir = Directory(getPathToRecordings());
       if (recordingsDir.listSync().isEmpty) return;
 
@@ -92,32 +98,59 @@ class _HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: mainAppBar(context, "Vibe"),
-      backgroundColor: indigoColor,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          homepageButton(
-            context,
-            const AddNewAlert(),
-            ADD_NEW_ALERT,
-            Icons.mic_rounded,
+    return WillPopScope(
+      onWillPop: () {
+        MoveToBackground.moveTaskToBack();
+        return Future.value(false);
+      },
+      child: Scaffold(
+        appBar: mainAppBar(context, "Vibe"),
+        backgroundColor: indigoColor,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            homepageButton(
+              context,
+              const AddNewAlert(),
+              ADD_NEW_ALERT,
+              Icons.mic_rounded,
+            ),
+            homepageButton(
+              context,
+              const SavedAlerts(),
+              SAVED_ALERTS,
+              Icons.library_music,
+            ),
+            homepageButton(
+              context,
+              const Settings(),
+              SETTINGS,
+              Icons.settings,
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            micStream.isRecording = !micStream.isRecording;
+
+            if (micStream.isRecording) {
+              micStream.controlMicStream(command: Command.start);
+              icon = Icons.square_rounded;
+              iconColor = Colors.black;
+            } else {
+              micStream.controlMicStream(command: Command.stop);
+              icon = Icons.fiber_manual_record;
+              iconColor = Colors.red;
+            }
+
+            setState(() {});
+          },
+          child: Icon(
+            icon,
+            color: iconColor,
           ),
-          homepageButton(
-            context,
-            const SavedAlerts(),
-            SAVED_ALERTS,
-            Icons.library_music,
-          ),
-          homepageButton(
-            context,
-            const Settings(),
-            SETTINGS,
-            Icons.settings,
-          ),
-        ],
+        ),
       ),
     );
   }
