@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
-import 'package:vibe/view/savedAlertsView.dart';
+import 'package:vibe/view/updateAlertPopupView.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class SaveNewAlertBox extends StatefulWidget {
-  const SaveNewAlertBox({Key? key}) : super(key: key);
+  final int alertId;
+  final String alertName;
+  final CategoryData alertCategory;
+  final IconData iconData;
+
+  const SaveNewAlertBox({
+    Key? key,
+    required this.alertId,
+    required this.alertName,
+    required this.alertCategory,
+    required this.iconData,
+  }) : super(key: key);
 
   @override
   State<SaveNewAlertBox> createState() => _SaveNewAlertBoxState();
@@ -18,6 +29,7 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
   CategoryData selectedCategory = CategoryData(
     categoryName: getCategories()![0].categoryName,
   );
+  IconData selectedIcon = getAlertIcons[0];
   //AudioPlayer audioPlayer = AudioPlayer();
 
   @override
@@ -25,47 +37,60 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
     return AlertDialog(
       actionsPadding:
           const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
-      title: const Text(SAVE_NEW_ALERT),
+      title: Text(
+        UPDATE_ALERT,
+        style: homepageButtonTextStyle(),
+        textAlign: TextAlign.right,
+      ),
       actions: <Widget>[
-        AlertNameTextField(nameController: nameController),
+        UpdateAlertNameTextField(
+          nameController: nameController,
+          alertName: "Add new alert name here",
+        ),
         CategoryDropdown(
           onSelect: (CategoryData data) {
             selectedCategory = data;
           },
           alertCategory: selectedCategory,
         ),
+        IconDropdown(
+          onSelect: (IconData data) {
+            selectedIcon = data;
+          },
+          iconData: selectedIcon,
+        ),
         //Save Button
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ElevatedButton(
               child: Text(
                 SAVE,
-                style: mainButtonTextStyle(),
+                style: popupTextStyle(),
               ),
+              //Save Button
               onPressed: () async {
-                await setAlertData(nameController.text, selectedCategory);
-
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SavedAlerts()),
+                await setAlertData(
+                  nameController.text,
+                  selectedCategory,
+                  selectedIcon,
                 );
                 Navigator.pop(context);
               },
-              style: mainButtonStyle(),
+              style: popupButtonStyle(),
             ),
             //Cancel Button
             ElevatedButton(
               child: Text(
                 CANCEL,
-                style: mainButtonTextStyle(),
+                style: popupTextStyle(),
               ),
-              onPressed: () async {
+              onPressed: () {
                 //TODO: create another popup with confirm delete
                 //await setAlertData(NEW_RECORDING_NAME, DEFAULT, audioPlayer);
                 Navigator.pop(context);
               },
-              style: mainButtonStyle(),
+              style: popupButtonStyle(),
             ),
           ],
         ),

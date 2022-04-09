@@ -9,6 +9,8 @@ import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
+import 'package:vibe/viewmodel/popupViewModel.dart';
+import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class AddNewAlert extends StatefulWidget {
   const AddNewAlert({Key? key}) : super(key: key);
@@ -69,7 +71,13 @@ class _AddNewAlertState extends State<AddNewAlert> {
     showDialog(
         context: context,
         builder: (context) {
-          return const SaveNewAlertBox();
+          var alert = getAlerts()![getAlerts()!.length - 1];
+          return SaveNewAlertBox(
+            alertId: alert.alertId,
+            alertName: NEW_RECORDING_NAME,
+            alertCategory: getCategories()![0],
+            iconData: getAlertIcons[0],
+          );
         });
 
     if (!getIsRecording()) return;
@@ -86,7 +94,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(ADD_NEW_ALERT),
+      appBar: mainAppBar(context, ADD_NEW_ALERT),
       backgroundColor: indigoColor,
       body: SingleChildScrollView(
         child: Column(

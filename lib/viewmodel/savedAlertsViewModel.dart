@@ -61,7 +61,7 @@ Future<void> populateAlertsList(String? path) async {
 Future<void> setAlertData(
   String alertName,
   CategoryData alertCategory,
-//  IconData alertIcon,
+  IconData alertIcon,
 ) async {
   AlertData alertToChange = getAlerts()![getAlerts()!.length - 1];
   //Duration? duration = await audioPlayer.setUrl(alertToChange.alertPath);
@@ -69,7 +69,7 @@ Future<void> setAlertData(
   alertToChange.alertId = getAlerts()!.length - 1;
   alertToChange.alertName = alertName;
   alertToChange.alertCategory = alertCategory;
-  alertToChange.alertIcon = getAlertIcons[3].codePoint;
+  alertToChange.alertIcon = alertIcon.codePoint;
   //alertToChange.alertDuration = duration!.inSeconds;
   alertToChange.alertPath =
       Directory(getPathToRecordings()).listSync()[getAlerts()!.length - 1].path;

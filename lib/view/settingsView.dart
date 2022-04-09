@@ -77,7 +77,7 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(SETTINGS),
+      appBar: mainAppBar(context, SETTINGS),
       body: Column(
         children: [
           Stack(

@@ -69,7 +69,7 @@ class _AlertSettingsState extends State<AlertSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: mainAppBar(ALERT),
+        appBar: mainAppBar(context, ALERT),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Column(

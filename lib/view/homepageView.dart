@@ -93,7 +93,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar("Vibe"),
+      appBar: mainAppBar(context, "Vibe"),
       backgroundColor: indigoColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

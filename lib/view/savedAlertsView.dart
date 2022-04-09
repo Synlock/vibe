@@ -44,7 +44,7 @@ class _SavedAlertsState extends State<SavedAlerts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(SAVED_ALERTS),
+      appBar: mainAppBar(context, SAVED_ALERTS),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Center(
