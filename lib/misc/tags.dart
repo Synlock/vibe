@@ -79,3 +79,5 @@ Lorem ipsum dolor
 sit amet, consectetur 
 adipiscing elit.
 """;
+
+const int MAX_ALERTS = 20;

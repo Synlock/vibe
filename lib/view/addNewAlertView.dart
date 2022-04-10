@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
@@ -75,7 +77,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
             iconData: getAlertIcons[0],
           );
         });
-
+    setState(() {});
     if (!getIsRecording()) return;
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -85,6 +87,12 @@ class _AddNewAlertState extends State<AddNewAlert> {
         setIsRecording(false);
       });
     });
+  }
+
+  int getDirectoryLength() {
+    Directory recordingDir = Directory(getPathToRecordings());
+    int length = recordingDir.listSync().length;
+    return length;
   }
 
   @override
@@ -114,67 +122,104 @@ class _AddNewAlertState extends State<AddNewAlert> {
             Container(
               height: 100,
             ),
-            displayStopWatch(stopWatchTimer, record),
-            Container(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: const Icon(null),
-                  onPressed: () {},
-                  iconSize: 50,
-                  color: Colors.transparent,
-                  hoverColor: Colors.transparent,
-                  splashColor: Colors.transparent,
-                  disabledColor: Colors.transparent,
-                  focusColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.fiber_manual_record),
-                      hoverColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onPressed: () {
-                        setIsRecording(!getIsRecording());
-
-                        setState(() {
-                          if (getIsRecording()) {
-                            startRecord(stopWatchTimer, record);
-                          } else {
-                            stopRecord(context, stopWatchTimer, record);
-                          }
-                        });
-                      },
-                      iconSize: 75,
-                      color: getRecordButtonColor(),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.insert_drive_file),
-                  onPressed: () {
-                    Navigator.popAndPushNamed(context, "/savedAlerts");
-                  },
-                  iconSize: 50,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+            getDirectoryLength() >= MAX_ALERTS
+                ? const Text(
+                    "Too many alerts, please delete some, max = $MAX_ALERTS")
+                : RecorderWidget(
+                    stopWatchTimer: stopWatchTimer,
+                    record: record,
+                    displayStopwatch: displayStopWatch,
+                    stopRecord: stopRecord),
           ],
         ),
       ),
+    );
+  }
+}
+
+class RecorderWidget extends StatefulWidget {
+  final StopWatchTimer stopWatchTimer;
+  final Record record;
+  final Function(StopWatchTimer, Record) displayStopwatch;
+  final Function(BuildContext, StopWatchTimer, Record) stopRecord;
+
+  const RecorderWidget({
+    Key? key,
+    required this.stopWatchTimer,
+    required this.record,
+    required this.displayStopwatch,
+    required this.stopRecord,
+  }) : super(key: key);
+
+  @override
+  State<RecorderWidget> createState() => _RecorderWidgetState();
+}
+
+class _RecorderWidgetState extends State<RecorderWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        widget.displayStopwatch(widget.stopWatchTimer, widget.record),
+        Container(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(null),
+              onPressed: () {},
+              iconSize: 50,
+              color: Colors.transparent,
+              hoverColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              disabledColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.fiber_manual_record),
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onPressed: () {
+                    setIsRecording(!getIsRecording());
+
+                    setState(() {
+                      if (getIsRecording()) {
+                        startRecord(widget.stopWatchTimer, widget.record);
+                      } else {
+                        widget.stopRecord(
+                            context, widget.stopWatchTimer, widget.record);
+                      }
+                    });
+                  },
+                  iconSize: 75,
+                  color: getRecordButtonColor(),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.insert_drive_file),
+              onPressed: () {
+                Navigator.popAndPushNamed(context, "/savedAlerts");
+              },
+              iconSize: 50,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
