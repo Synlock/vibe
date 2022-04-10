@@ -57,8 +57,6 @@ Future<void> stopRecording(Record record) async {
     getAlerts()!.map((e) => e.toJson()).toList(),
     FileMode.write,
   );
-
-  print(getAlerts()!.length);
 }
 
 void executeStopWatch(StopWatchTimer stopWatchTimer, StopWatchExecute execute) {

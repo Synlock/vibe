@@ -3,6 +3,7 @@ const String SIGN_IN = "Sign In";
 const String LOGOUT = "Logout";
 
 //Pages/Routes
+const String VIBE = "Vibe";
 const String ADD_NEW_ALERT = "Add New Alert";
 const String SAVED_ALERTS = "Saved Alerts";
 const String SETTINGS = "Settings";

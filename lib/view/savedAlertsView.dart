@@ -26,9 +26,7 @@ class _SavedAlertsState extends State<SavedAlerts> {
       final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
       print(json);
       removeAlertsFromPage(alertBtnsWidgets);
-      print(alertBtnsWidgets.length);
       addAlertsToPage(alertBtnsWidgets);
-      print(alertBtnsWidgets.length);
     });
   }
 

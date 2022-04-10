@@ -11,7 +11,7 @@ List<AlertData>? getAlerts() => alerts;
 List<CategoryData>? getCategories() => categories;
 
 int alertIndex = 0;
-Future<void> populateAlertsList(String? path) async {
+Future<bool> populateAlertsList(String? path) async {
   File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
   final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
   print(json);
@@ -36,6 +36,7 @@ Future<void> populateAlertsList(String? path) async {
     ));
     alertIndex++;
   }
+  return true;
 }
 
 //TODO: fix if delete file cannot record anymore, problem when getting files in directory to JSON
