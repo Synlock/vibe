@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/misc/tags.dart';
-import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/view/alertSettingsView.dart';
@@ -26,7 +25,10 @@ class _SavedAlertsState extends State<SavedAlerts> {
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
       print(json);
+      removeAlertsFromPage(alertBtnsWidgets);
+      print(alertBtnsWidgets.length);
       addAlertsToPage(alertBtnsWidgets);
+      print(alertBtnsWidgets.length);
     });
   }
 
@@ -34,9 +36,22 @@ class _SavedAlertsState extends State<SavedAlerts> {
     for (AlertData alert in getAlerts()!) {
       if (alertBtnsWidgets.length >= getAlerts()!.length) break;
 
-      alertBtnsWidgets.add(AlertButton(
-        alertData: alert,
-      ));
+      alertBtnsWidgets.add(
+        AlertButton(
+          alertData: alert,
+        ),
+      );
+    }
+    setState(() {});
+  }
+
+  void removeAlertsFromPage(List<Widget> alertBtnsWidgets) {
+    for (AlertData alert in getAlerts()!) {
+      alertBtnsWidgets.remove(
+        AlertButton(
+          alertData: alert,
+        ),
+      );
     }
     setState(() {});
   }
@@ -57,7 +72,9 @@ class _SavedAlertsState extends State<SavedAlerts> {
       floatingActionButton: Transform.scale(
         scale: 1.15,
         child: FloatingActionButton(
-          onPressed: handleNewRoute(context, const AddNewAlert()),
+          onPressed: () {
+            Navigator.popAndPushNamed(context, "/newAlert");
+          },
           backgroundColor: yellowColor,
           isExtended: true,
           child: Icon(

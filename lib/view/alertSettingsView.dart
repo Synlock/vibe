@@ -4,6 +4,7 @@ import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
+import 'package:vibe/view/confirmDeletePopupView.dart';
 import 'package:vibe/view/updateAlertPopupView.dart';
 
 class AlertSettings extends StatefulWidget {
@@ -62,6 +63,27 @@ class _AlertSettingsState extends State<AlertSettings> {
             IconData(item[ALERT_ICON], fontFamily: 'MaterialIcons');
         widget.alertCategory = item[ALERT_CATEGORY];
       });
+    }
+  }
+
+  void showConfirmDeleteBox() async {
+    var navigationResult = await showDialog(
+        context: context,
+        builder: (context) {
+          return ConfirmDeleteAlertBox(
+            alertId: widget.alertId,
+            // alertName: widget.alertName,
+            // alertCategory: widget.alertCategory,
+            // iconData: widget.alertIcon,
+          );
+        });
+    if (navigationResult == null) {
+      //final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+      //final item = json[widget.alertId];
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Navigator.pushNamed(context, "/savedAlerts");
+      setState(() {});
     }
   }
 
@@ -143,7 +165,9 @@ class _AlertSettingsState extends State<AlertSettings> {
                     child: FractionallySizedBox(
                       widthFactor: 0.35,
                       child: miniRoundedButton(
-                        () {},
+                        () {
+                          showConfirmDeleteBox();
+                        },
                         DELETE,
                       ),
                     ),

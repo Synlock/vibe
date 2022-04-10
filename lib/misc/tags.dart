@@ -10,6 +10,7 @@ const String ALERT = "Alert Settings";
 
 //Buttons
 const String SAVE = "Save";
+const String CONFIRM = "Confirm";
 const String CANCEL = "Cancel";
 const String DELETE = "Delete";
 
@@ -61,6 +62,7 @@ const String EMERGENCY_CATEGORY_UI = "Emergency";
 const String ALERT_NAME_HINT = "Alert name";
 const String SAVE_NEW_ALERT = "Save new alert";
 const String UPDATE_ALERT = "Update alert";
+const String DELETE_ALERT = "Are you sure you want to delete this alert?";
 
 //File Management
 const String RECORDINGS_FOLDER_NAME = "Vibe Recordings";

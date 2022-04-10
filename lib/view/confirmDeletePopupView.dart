@@ -1,27 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
+import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
-class UpdateAlertBox extends StatefulWidget {
+class ConfirmDeleteAlertBox extends StatefulWidget {
   final int alertId;
-  final String alertName;
-  final String alertCategory;
-  final IconData iconData;
-  const UpdateAlertBox({
+  const ConfirmDeleteAlertBox({
     Key? key,
     required this.alertId,
-    required this.alertName,
-    required this.alertCategory,
-    required this.iconData,
   }) : super(key: key);
 
   @override
-  State<UpdateAlertBox> createState() => _UpdateAlertBoxState();
+  State<ConfirmDeleteAlertBox> createState() => _ConfirmDeleteAlertBoxState();
 }
 
-class _UpdateAlertBoxState extends State<UpdateAlertBox> {
+class _ConfirmDeleteAlertBoxState extends State<ConfirmDeleteAlertBox> {
   TextEditingController nameController = TextEditingController();
   String selectedCategory = getCategories()![0].categoryName;
   IconData selectedIcon = getAlertIcons[0];
@@ -33,44 +31,33 @@ class _UpdateAlertBoxState extends State<UpdateAlertBox> {
       actionsPadding:
           const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
       title: Text(
-        UPDATE_ALERT,
+        DELETE_ALERT,
         style: homepageButtonTextStyle(),
         textAlign: TextAlign.right,
       ),
       actions: <Widget>[
-        UpdateAlertNameTextField(
-          nameController: nameController,
-          alertName: widget.alertName,
-        ),
-        CategoryDropdown(
-          onSelect: (String data) {
-            selectedCategory = data;
-          },
-          alertCategory: widget.alertCategory,
-        ),
-        IconDropdown(
-          onSelect: (IconData data) {
-            selectedIcon = data;
-          },
-          iconData: widget.iconData,
-        ),
         //Save Button
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               child: Text(
-                SAVE,
+                CONFIRM,
                 style: popupTextStyle(),
               ),
-              //Save Button
+              //Delete Button
               onPressed: () async {
-                await updateAlertData(
-                  widget.alertId,
-                  nameController.text,
-                  selectedCategory,
-                  selectedIcon,
-                );
+                Directory recordingsDirectory =
+                    Directory(getPathToRecordings());
+                final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+                final item = json[widget.alertId];
+
+                File f =
+                    File("${recordingsDirectory.path}/${item[ALERT_ID]}.wav");
+                await f.delete();
+
+                getAlerts()!.remove(getAlerts()![widget.alertId]);
+
                 Navigator.pop(context);
               },
               style: popupButtonStyle(),

@@ -59,29 +59,30 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
   }
 }
 
-class AlertNameTextField extends StatefulWidget {
+class UpdateAlertNameTextField extends StatefulWidget {
   final TextEditingController nameController;
-  const AlertNameTextField({
+  final String alertName;
+  const UpdateAlertNameTextField({
     Key? key,
     required this.nameController,
+    required this.alertName,
   }) : super(key: key);
 
   @override
-  State<AlertNameTextField> createState() => _AlertNameTextFieldState();
+  State<UpdateAlertNameTextField> createState() =>
+      _UpdateAlertNameTextFieldState();
 }
 
-class _AlertNameTextFieldState extends State<AlertNameTextField> {
+class _UpdateAlertNameTextFieldState extends State<UpdateAlertNameTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      textAlign: TextAlign.end,
+      textAlign: TextAlign.right,
       controller: widget.nameController,
       maxLength: 25,
       maxLengthEnforcement: MaxLengthEnforcement.enforced,
-      decoration: const InputDecoration(
-        labelText: "Alert Name",
-        hintText: "New Recording",
-        helperText: "ie. Microwave end beep",
+      decoration: InputDecoration(
+        hintText: widget.alertName,
       ),
     );
   }

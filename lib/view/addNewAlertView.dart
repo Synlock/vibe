@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
-import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
@@ -166,7 +164,9 @@ class _AddNewAlertState extends State<AddNewAlert> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.insert_drive_file),
-                  onPressed: handleNewRoute(context, const SavedAlerts()),
+                  onPressed: () {
+                    Navigator.popAndPushNamed(context, "/savedAlerts");
+                  },
                   iconSize: 50,
                   color: Colors.white,
                 ),
