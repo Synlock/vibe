@@ -20,50 +20,32 @@ Future<void> populateAlertsList(String? path) async {
   FileSystemEntity fileInDirectory = File("");
   for (var i = alertIndex; i < directory.listSync().length; i++) {
     fileInDirectory = directory.listSync()[i];
-
     if (fileInDirectory.path == path) break;
 
-    if (i == 0) {
-      getAlerts()!.add(AlertData(
-        alertId: 0,
-        alertName: "alertName",
-        alertCategory: CategoryData(categoryName: DEFAULT),
-        alertIcon: 0,
-        alertDuration: 0, //json[0][ALERT_DURATION],
-        alertPath: directory.listSync()[0].path,
-        typeOfAlert: 'type',
-        isSilent: false,
-      ));
-    } else {
-      final item = json[i];
-      print(item);
-      getAlerts()!.add(AlertData(
-        alertId: item[ALERT_ID],
-        alertName: item[ALERT_NAME],
-        alertCategory: item[ALERT_CATEGORY],
-        alertIcon: item[ALERT_ICON],
-        alertDuration: 0, //item[ALERT_DURATION],
-        alertPath: fileInDirectory.path,
-        typeOfAlert: '',
-        isSilent: false,
-      ));
-    }
+    final item = json[i];
+
+    getAlerts()!.add(AlertData(
+      alertId: item[ALERT_ID],
+      alertName: item[ALERT_NAME],
+      alertCategory: item[ALERT_CATEGORY],
+      alertIcon: item[ALERT_ICON],
+      alertDuration: 0, //item[ALERT_DURATION],
+      alertPath: fileInDirectory.path,
+      typeOfAlert: item[TYPE_OF_ALERT],
+      isSilent: item[IS_SILENT],
+    ));
     alertIndex++;
   }
-  await encodeJson(
-    jsonFile,
-    getAlerts()!.map((e) => e.toJson()).toList(),
-    FileMode.write,
-  );
 }
 
 //TODO: fix if delete file cannot record anymore, problem when getting files in directory to JSON
 Future<void> setAlertData(
   String alertName,
-  CategoryData alertCategory,
+  String alertCategory,
   IconData alertIcon,
 ) async {
   AlertData alertToChange = getAlerts()![getAlerts()!.length - 1];
+  Directory recordingsDirectory = Directory(getPathToRecordings());
   //Duration? duration = await audioPlayer.setUrl(alertToChange.alertPath);
 
   alertToChange.alertId = getAlerts()!.length - 1;
@@ -71,8 +53,11 @@ Future<void> setAlertData(
   alertToChange.alertCategory = alertCategory;
   alertToChange.alertIcon = alertIcon.codePoint;
   //alertToChange.alertDuration = duration!.inSeconds;
-  alertToChange.alertPath =
-      Directory(getPathToRecordings()).listSync()[getAlerts()!.length - 1].path;
+  alertToChange.alertPath = getAlerts()!.isNotEmpty
+      ? recordingsDirectory
+          .listSync()[recordingsDirectory.listSync().length - 1]
+          .path
+      : recordingsDirectory.path + "/0.wav";
   alertToChange.typeOfAlert = MEDIUM;
   alertToChange.isSilent = false;
 
@@ -84,8 +69,8 @@ Future<void> setAlertData(
   );
 }
 
-Future<void> updateAlertData(int alertId, String newName,
-    CategoryData newCategory, IconData newIcon) async {
+Future<void> updateAlertData(
+    int alertId, String newName, String newCategory, IconData newIcon) async {
   AlertData alertToChange = getAlerts()![alertId];
 
   //Duration? duration = await audioPlayer.setUrl(alertToChange.alertPath);
@@ -93,7 +78,7 @@ Future<void> updateAlertData(int alertId, String newName,
     alertToChange.alertName = newName;
   }
 
-  if (newCategory != getCategories()![0]) {
+  if (newCategory != getCategories()![0].categoryName) {
     alertToChange.alertCategory = newCategory;
   }
 

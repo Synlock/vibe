@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
@@ -13,7 +12,7 @@ class AlertSettings extends StatefulWidget {
   IconData alertIcon;
   String typeOfAlert;
   bool isSilenced;
-  CategoryData alertCategory;
+  String alertCategory;
   AlertSettings({
     Key? key,
     required this.alertId,
@@ -61,7 +60,7 @@ class _AlertSettingsState extends State<AlertSettings> {
         widget.alertName = item[ALERT_NAME];
         widget.alertIcon =
             IconData(item[ALERT_ICON], fontFamily: 'MaterialIcons');
-        widget.alertCategory.categoryName = item[ALERT_CATEGORY][CATEGORY_NAME];
+        widget.alertCategory = item[ALERT_CATEGORY];
       });
     }
   }
@@ -133,7 +132,7 @@ class _AlertSettingsState extends State<AlertSettings> {
                   alertButton(
                     () {},
                     CATEGORY_UI,
-                    widget.alertCategory.categoryName,
+                    widget.alertCategory,
                     alertButtonTextStyle()!,
                     subAlertButtonTextStyle()!,
                     alertButtonStyle()!,

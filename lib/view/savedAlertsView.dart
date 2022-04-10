@@ -71,7 +71,6 @@ class _SavedAlertsState extends State<SavedAlerts> {
   }
 }
 
-//TODO: make icon dynamic based off of category
 class AlertButton extends StatefulWidget {
   final AlertData alertData;
 

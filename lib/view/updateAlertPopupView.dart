@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
@@ -9,7 +8,7 @@ import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 class UpdateAlertBox extends StatefulWidget {
   final int alertId;
   final String alertName;
-  final CategoryData alertCategory;
+  final String alertCategory;
   final IconData iconData;
   const UpdateAlertBox({
     Key? key,
@@ -25,9 +24,7 @@ class UpdateAlertBox extends StatefulWidget {
 
 class _UpdateAlertBoxState extends State<UpdateAlertBox> {
   TextEditingController nameController = TextEditingController();
-  CategoryData selectedCategory = CategoryData(
-    categoryName: getCategories()![0].categoryName,
-  );
+  String selectedCategory = getCategories()![0].categoryName;
   IconData selectedIcon = getAlertIcons[0];
   //AudioPlayer audioPlayer = AudioPlayer();
 
@@ -47,7 +44,7 @@ class _UpdateAlertBoxState extends State<UpdateAlertBox> {
           alertName: widget.alertName,
         ),
         CategoryDropdown(
-          onSelect: (CategoryData data) {
+          onSelect: (String data) {
             selectedCategory = data;
           },
           alertCategory: widget.alertCategory,

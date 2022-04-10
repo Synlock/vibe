@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/alertSettingsView.dart';
 import 'package:vibe/view/homepageView.dart';
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
               alertIcon: const IconData(0),
               typeOfAlert: "",
               isSilenced: false,
-              alertCategory: CategoryData(categoryName: ""),
+              alertCategory: "",
             ),
         '/settings': (context) => const Settings(),
       },

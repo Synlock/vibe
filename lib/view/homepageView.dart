@@ -34,13 +34,13 @@ class _HomepageState extends State<Homepage> {
       await getPermissions();
       await setRecordingsDirectory();
       initCategoryList();
-      micStream.isRecording = true;
-      micStream.controlMicStream(command: Command.start);
+      //micStream.isRecording = true;
+      //micStream.controlMicStream(command: Command.start);
       Directory recordingsDir = Directory(getPathToRecordings());
       if (recordingsDir.listSync().isEmpty) return;
 
-      await populateAlertsList(
-          "${recordingsDir.path}/${recordingsDir.listSync().length}");
+      await populateAlertsList("temp");
+      //"${recordingsDir.path}/${recordingsDir.listSync().length}");
       print(getAlerts()!.length);
     });
   }

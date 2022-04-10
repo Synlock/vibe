@@ -71,11 +71,9 @@ class _AddNewAlertState extends State<AddNewAlert> {
     showDialog(
         context: context,
         builder: (context) {
-          var alert = getAlerts()![getAlerts()!.length - 1];
           return SaveNewAlertBox(
-            alertId: alert.alertId,
             alertName: NEW_RECORDING_NAME,
-            alertCategory: getCategories()![0],
+            alertCategory: getCategories()![0].categoryName,
             iconData: getAlertIcons[0],
           );
         });
@@ -126,10 +124,15 @@ class _AddNewAlertState extends State<AddNewAlert> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.stop),
+                  icon: const Icon(null),
                   onPressed: () {},
                   iconSize: 50,
-                  color: Colors.grey,
+                  color: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  disabledColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),

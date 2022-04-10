@@ -5,8 +5,8 @@ import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/model/audioRecorderModel.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/misc/tags.dart';
+import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -26,11 +26,22 @@ void setIsRecording(bool newIsRecording) => isRecording = newIsRecording;
 
 String getPathToRecordings() => pathToRecordings;
 void setPathToRecordings(String newPath) => pathToRecordings = newPath;
-
 Future<void> startRecording(Record record, String path) async {
   try {
     if (await record.hasPermission()) {
       await record.start(path: path);
+
+      Directory recordingsDirectory = Directory(getPathToRecordings());
+
+      getAlerts()!.add(AlertData(
+          alertId: getAlerts()!.length - 1,
+          alertName: ALERT_NAME,
+          alertCategory: DEFAULT,
+          alertIcon: getAlertIcons[0].codePoint,
+          alertDuration: 0,
+          typeOfAlert: DEFAULT_ALERT_TYPE,
+          isSilent: false,
+          alertPath: recordingsDirectory.path));
     }
   } catch (e) {
     print(e);
@@ -41,32 +52,13 @@ Future<void> stopRecording(Record record) async {
   final path = await record.stop();
 
   File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
-  //if alerts list is empty temporarily populate list to avoid saving json as empty
-  if (getAlerts()!.isEmpty) {
-    //add temp data
-    getAlerts()!.add(AlertData(
-      alertId: 0,
-      alertName: "alertName",
-      alertCategory: CategoryData(categoryName: DEFAULT),
-      alertIcon: getAlertIcons[3].codePoint,
-      alertDuration: 0,
-      alertPath: Directory(getPathToRecordings()).listSync()[0].path,
-      typeOfAlert: '',
-      isSilent: false,
-    ));
-    //save temp data to json
-    await encodeJson(
-      jsonFile,
-      getAlerts()!.map((e) => e.toJson()).toList(),
-      FileMode.write,
-    );
-  }
+  await encodeJson(
+    jsonFile,
+    getAlerts()!.map((e) => e.toJson()).toList(),
+    FileMode.write,
+  );
 
-  //populate list with temp data if list was empty
-  //otherwise populate list
-  await populateAlertsList(path);
-
-  //save new list to json
+  print(getAlerts()!.length);
 }
 
 void executeStopWatch(StopWatchTimer stopWatchTimer, StopWatchExecute execute) {

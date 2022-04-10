@@ -3,7 +3,7 @@ import 'package:vibe/misc/tags.dart';
 class AlertData {
   int alertId;
   String alertName;
-  CategoryData alertCategory;
+  String alertCategory;
   int alertIcon;
   int alertDuration;
   String alertPath;
@@ -31,7 +31,7 @@ class AlertData {
   AlertData.fromJson(Map<String, dynamic> json)
       : alertId = json[ALERT_ID] as int,
         alertName = json[ALERT_NAME] as String,
-        alertCategory = json[ALERT_CATEGORY] as CategoryData,
+        alertCategory = json[ALERT_CATEGORY] as String,
         alertIcon = json[ALERT_ICON] as int,
         alertDuration = json[ALERT_DURATION] as int,
         alertPath = json[ALERT_PATH] as String,

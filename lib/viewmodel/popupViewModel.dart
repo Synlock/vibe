@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vibe/misc/tags.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -14,8 +13,8 @@ List<IconData> getAlertIcons = [
 ];
 
 class CategoryDropdown extends StatefulWidget {
-  Function(CategoryData) onSelect;
-  CategoryData alertCategory;
+  Function(String) onSelect;
+  String alertCategory;
   CategoryDropdown({
     Key? key,
     required this.onSelect,
@@ -32,10 +31,10 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        DropdownButton<CategoryData>(
+        DropdownButton<String>(
           value: widget.alertCategory,
           items: getCategoryDropdown(),
-          onChanged: (CategoryData? newValue) {
+          onChanged: (String? newValue) {
             setState(() {
               widget.alertCategory = newValue!;
               widget.onSelect(widget.alertCategory);
@@ -50,11 +49,11 @@ class _CategoryDropdownState extends State<CategoryDropdown> {
     );
   }
 
-  List<DropdownMenuItem<CategoryData>> getCategoryDropdown() {
+  List<DropdownMenuItem<String>> getCategoryDropdown() {
     return getCategories()!
-        .map((e) => DropdownMenuItem<CategoryData>(
+        .map((e) => DropdownMenuItem<String>(
               child: Text(e.categoryName),
-              value: e,
+              value: e.categoryName,
             ))
         .toList();
   }
