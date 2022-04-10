@@ -14,6 +14,7 @@ const String SAVE = "Save";
 const String CONFIRM = "Confirm";
 const String CANCEL = "Cancel";
 const String DELETE = "Delete";
+const String PLAY = "Play alert";
 
 //Saved Alerts Model
 const String ALERT_ID = "alertId";

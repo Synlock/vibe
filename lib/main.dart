@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/view/addNewAlertView.dart';
-import 'package:vibe/view/alertSettingsView.dart';
 import 'package:vibe/view/homepageView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
@@ -28,14 +27,6 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const Homepage(),
         '/newAlert': (context) => const AddNewAlert(),
         '/savedAlerts': (context) => const SavedAlerts(),
-        '/alertSettings': (context) => AlertSettings(
-              alertId: 0,
-              alertName: "",
-              alertIcon: const IconData(0),
-              typeOfAlert: "",
-              isSilenced: false,
-              alertCategory: "",
-            ),
         '/settings': (context) => const Settings(),
       },
     );

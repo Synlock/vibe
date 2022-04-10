@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/buttons.dart';
@@ -14,6 +15,7 @@ class AlertSettings extends StatefulWidget {
   String typeOfAlert;
   bool isSilenced;
   String alertCategory;
+  String alertPath;
   AlertSettings({
     Key? key,
     required this.alertId,
@@ -22,6 +24,7 @@ class AlertSettings extends StatefulWidget {
     required this.typeOfAlert,
     required this.isSilenced,
     required this.alertCategory,
+    required this.alertPath,
   }) : super(key: key);
 
   @override
@@ -29,6 +32,12 @@ class AlertSettings extends StatefulWidget {
 }
 
 class _AlertSettingsState extends State<AlertSettings> {
+  final _player = AudioPlayer();
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void setToggle(bool value) {
     if (!widget.isSilenced) {
       setState(() {
@@ -123,6 +132,19 @@ class _AlertSettingsState extends State<AlertSettings> {
                       ),
                     ],
                   ),
+                  alertButton(
+                    () async {
+                      await _player.setAudioSource(
+                          AudioSource.uri(Uri.parse(widget.alertPath)));
+                      await _player.play();
+                    },
+                    PLAY,
+                    "",
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
+                  divider(),
                   alertButton(
                     () {},
                     TYPE_OF_ALERT_UI,

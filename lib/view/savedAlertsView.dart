@@ -120,6 +120,7 @@ class _AlertButtonState extends State<AlertButton> {
                 typeOfAlert: widget.alertData.typeOfAlert,
                 isSilenced: widget.alertData.isSilent,
                 alertCategory: widget.alertData.alertCategory,
+                alertPath: widget.alertData.alertPath,
               ),
             ),
           ).then(onGoBack);
