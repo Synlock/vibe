@@ -9,6 +9,12 @@ const String SAVED_ALERTS = "Saved Alerts";
 const String SETTINGS = "Settings";
 const String ALERT = "Alert Settings";
 
+//Named Routes
+const String HOME_ROUTE = "/home";
+const String NEW_ALERT_ROUTE = "/newAlert";
+const String SAVED_ALERTS_ROUTE = "/savedAlerts";
+const String SETTINGS_ROUTE = "/settings";
+
 //Buttons
 const String SAVE = "Save";
 const String CONFIRM = "Confirm";
@@ -68,7 +74,7 @@ const String DELETE_ALERT = "Are you sure you want to delete this alert?";
 
 //File Management
 const String RECORDINGS_FOLDER_NAME = "Vibe Recordings";
-const String NEW_RECORDING_NAME = " - New Recording";
+const String NEW_RECORDING_NAME = "New Alert";
 const String ALERTS_JSON_FILE_NAME = "alertsJson.json";
 
 //Misc

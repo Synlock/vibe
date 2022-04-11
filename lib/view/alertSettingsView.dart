@@ -81,17 +81,10 @@ class _AlertSettingsState extends State<AlertSettings> {
         builder: (context) {
           return ConfirmDeleteAlertBox(
             alertId: widget.alertId,
-            // alertName: widget.alertName,
-            // alertCategory: widget.alertCategory,
-            // iconData: widget.alertIcon,
+            alertName: widget.alertName,
           );
         });
     if (navigationResult == null) {
-      //final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-      //final item = json[widget.alertId];
-      Navigator.pop(context);
-      Navigator.pop(context);
-      Navigator.pushNamed(context, "/savedAlerts");
       setState(() {});
     }
   }

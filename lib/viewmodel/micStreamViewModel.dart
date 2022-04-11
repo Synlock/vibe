@@ -352,10 +352,11 @@ class StartMicStreamState extends State<StartMicStream>
     //   isRecording = true;
     // });
 
-    //TODO: python script needs to be inserted here
-
     visibleSamples = [];
     listener = stream!.listen(_calculateWaveSamples);
+
+    //TODO: python script needs to be inserted here
+
     return true;
   }
 

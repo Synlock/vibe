@@ -58,8 +58,8 @@ class _AddNewAlertState extends State<AddNewAlert> {
     );
   }
 
-  void stopRecord(
-      BuildContext context, StopWatchTimer stopWatchTimer, Record record) {
+  void stopRecord(BuildContext context, StopWatchTimer stopWatchTimer,
+      Record record) async {
     //Stops the timer and stops the recording
     executeStopWatch(stopWatchTimer, StopWatchExecute.stop);
     stopRecording(record);
@@ -68,7 +68,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
     setRecordButtonColor(Colors.red);
     setRecordButtonBorderRadius(BorderRadius.circular(100));
 
-    showDialog(
+    var navigationResults = await showDialog(
         context: context,
         builder: (context) {
           return SaveNewAlertBox(
@@ -77,7 +77,13 @@ class _AddNewAlertState extends State<AddNewAlert> {
             iconData: getAlertIcons[0],
           );
         });
-    setState(() {});
+    if (navigationResults == null) {
+      setState(() {
+        if (getAlerts()!.last.alertName == ALERT_NAME) {
+          setAlertData(NEW_RECORDING_NAME, DEFAULT, getAlertIcons[0]);
+        }
+      });
+    }
     if (!getIsRecording()) return;
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -167,9 +173,9 @@ class _RecorderWidgetState extends State<RecorderWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton(
-              icon: const Icon(null),
-              onPressed: () {},
+            const IconButton(
+              icon: Icon(null),
+              onPressed: null,
               iconSize: 50,
               color: Colors.transparent,
               hoverColor: Colors.transparent,
@@ -188,7 +194,15 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: IconButton(
-                  icon: const Icon(Icons.fiber_manual_record),
+                  icon: AnimatedContainer(
+                    width: 60,
+                    height: 60,
+                    duration: const Duration(seconds: 1),
+                    decoration: BoxDecoration(
+                      color: getRecordButtonColor(),
+                      borderRadius: getRecordButtonBorderRadius(),
+                    ),
+                  ),
                   hoverColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
@@ -204,8 +218,6 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                       }
                     });
                   },
-                  iconSize: 75,
-                  color: getRecordButtonColor(),
                 ),
               ),
             ),

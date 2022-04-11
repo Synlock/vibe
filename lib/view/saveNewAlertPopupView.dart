@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
-import 'package:vibe/view/updateAlertPopupView.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -82,7 +81,6 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
               ),
               onPressed: () {
                 //TODO: create another popup with confirm delete
-                //await setAlertData(NEW_RECORDING_NAME, DEFAULT, audioPlayer);
                 Navigator.pop(context);
               },
               style: popupButtonStyle(),

@@ -10,9 +10,11 @@ import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class ConfirmDeleteAlertBox extends StatefulWidget {
   final int alertId;
+  final String alertName;
   const ConfirmDeleteAlertBox({
     Key? key,
     required this.alertId,
+    required this.alertName,
   }) : super(key: key);
 
   @override
@@ -49,16 +51,20 @@ class _ConfirmDeleteAlertBoxState extends State<ConfirmDeleteAlertBox> {
               onPressed: () async {
                 Directory recordingsDirectory =
                     Directory(getPathToRecordings());
+                final jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
                 final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-                final item = json[widget.alertId];
 
-                File f =
-                    File("${recordingsDirectory.path}/${item[ALERT_ID]}.wav");
-                await f.delete();
+                deleteAlertFile(recordingsDirectory, widget.alertName);
 
-                getAlerts()!.remove(getAlerts()![widget.alertId]);
+                getAlerts()!.removeAt(widget.alertId);
+
+                json[widget.alertId] = "";
+                await encodeJson(jsonFile, json, FileMode.write);
 
                 Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pushNamed(context, SAVED_ALERTS_ROUTE);
               },
               style: popupButtonStyle(),
             ),

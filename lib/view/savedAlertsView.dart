@@ -33,7 +33,6 @@ class _SavedAlertsState extends State<SavedAlerts> {
   void addAlertsToPage(List<Widget> alertBtnsWidgets) {
     for (AlertData alert in getAlerts()!) {
       if (alertBtnsWidgets.length >= getAlerts()!.length) break;
-
       alertBtnsWidgets.add(
         AlertButton(
           alertData: alert,
@@ -44,13 +43,7 @@ class _SavedAlertsState extends State<SavedAlerts> {
   }
 
   void removeAlertsFromPage(List<Widget> alertBtnsWidgets) {
-    for (AlertData alert in getAlerts()!) {
-      alertBtnsWidgets.remove(
-        AlertButton(
-          alertData: alert,
-        ),
-      );
-    }
+    alertBtnsWidgets.clear();
     setState(() {});
   }
 

@@ -26,6 +26,7 @@ void setIsRecording(bool newIsRecording) => isRecording = newIsRecording;
 
 String getPathToRecordings() => pathToRecordings;
 void setPathToRecordings(String newPath) => pathToRecordings = newPath;
+
 Future<void> startRecording(Record record, String path) async {
   try {
     if (await record.hasPermission()) {

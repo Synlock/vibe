@@ -24,10 +24,10 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       initialRoute: '/',
       routes: {
-        '/home': (context) => const Homepage(),
-        '/newAlert': (context) => const AddNewAlert(),
-        '/savedAlerts': (context) => const SavedAlerts(),
-        '/settings': (context) => const Settings(),
+        HOME_ROUTE: (context) => const Homepage(),
+        NEW_ALERT_ROUTE: (context) => const AddNewAlert(),
+        SAVED_ALERTS_ROUTE: (context) => const SavedAlerts(),
+        SETTINGS_ROUTE: (context) => const Settings(),
       },
     );
   }

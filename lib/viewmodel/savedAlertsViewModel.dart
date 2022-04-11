@@ -54,11 +54,11 @@ Future<void> setAlertData(
   alertToChange.alertCategory = alertCategory;
   alertToChange.alertIcon = alertIcon.codePoint;
   //alertToChange.alertDuration = duration!.inSeconds;
-  alertToChange.alertPath = getAlerts()!.isNotEmpty
-      ? recordingsDirectory
-          .listSync()[recordingsDirectory.listSync().length - 1]
-          .path
-      : recordingsDirectory.path + "/0.wav";
+
+  renameAlertFile("${recordingsDirectory.path}/${alertToChange.alertId}.wav",
+      recordingsDirectory, alertName);
+  alertToChange.alertPath = recordingsDirectory.listSync().last.path;
+
   alertToChange.typeOfAlert = MEDIUM;
   alertToChange.isSilent = false;
 
@@ -72,10 +72,16 @@ Future<void> setAlertData(
 
 Future<void> updateAlertData(
     int alertId, String newName, String newCategory, IconData newIcon) async {
+  Directory recordingsDirectory = Directory(getPathToRecordings());
   AlertData alertToChange = getAlerts()![alertId];
 
   //Duration? duration = await audioPlayer.setUrl(alertToChange.alertPath);
   if (newName != "") {
+    await renameAlertFile(
+        "${recordingsDirectory.path}/${alertToChange.alertName}.wav",
+        recordingsDirectory,
+        newName);
+
     alertToChange.alertName = newName;
   }
 

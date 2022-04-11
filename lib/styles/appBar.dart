@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibe/misc/tags.dart';
 
 AppBar mainAppBar(BuildContext context, String appBarText) {
   return AppBar(
@@ -27,12 +28,14 @@ AppBar mainAppBar(BuildContext context, String appBarText) {
           ),
         ),
       ),
-      IconButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        icon: const Icon(Icons.arrow_forward),
-      ),
+      ModalRoute.of(context)!.settings.name != HOME_ROUTE
+          ? IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_forward),
+            )
+          : Container(),
     ],
   );
 }

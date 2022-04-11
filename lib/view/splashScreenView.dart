@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/initApplicationViewModel.dart';
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (status == AnimationStatus.completed) {
         setState(() {});
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pushNamed(context, "/home");
+          Navigator.popAndPushNamed(context, HOME_ROUTE);
         });
       }
     });
@@ -100,9 +101,15 @@ class _InitApplicationState extends State<InitApplication> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      await getPermissions();
+      widget.animationController.stop();
+      bool approved = await getPermissions();
+
       await setRecordingsDirectory();
       initCategoryList();
+
+      if (approved) {
+        widget.animationController.forward();
+      }
 
       Directory recordingsDir = Directory(getPathToRecordings());
       if (recordingsDir.listSync().isEmpty) return;
