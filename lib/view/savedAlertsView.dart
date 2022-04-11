@@ -1,71 +1,98 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:vibe/misc/commonCalls.dart';
-import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
-import 'package:vibe/view/alertSettingsView.dart';
+import 'package:vibe/view/newCategoryPopupView.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class SavedAlerts extends StatefulWidget {
-  const SavedAlerts({Key? key}) : super(key: key);
+  final int initialIndex;
+  const SavedAlerts({Key? key, required this.initialIndex}) : super(key: key);
 
   @override
   State<SavedAlerts> createState() => _SavedAlertsState();
 }
 
-class _SavedAlertsState extends State<SavedAlerts> {
-  List<Widget> alertBtnsWidgets = <Widget>[];
+class _SavedAlertsState extends State<SavedAlerts>
+    with SingleTickerProviderStateMixin {
+  TabController? _controller;
+  int _selectedIndex = 1;
 
+  List<Widget> alertBtns = <Widget>[];
+  List<Widget> categoryBtns = <Widget>[];
   @override
   void initState() {
     super.initState();
+
+    _controller = TabController(
+        initialIndex: widget.initialIndex, length: 2, vsync: this);
+    _controller!.addListener(() {
+      setState(() {
+        _selectedIndex = _controller!.index;
+      });
+    });
+
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-      print(json);
-      removeAlertsFromPage(alertBtnsWidgets);
-      addAlertsToPage(alertBtnsWidgets);
+      try {
+        final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+        print(json);
+      } catch (e) {
+        print(e);
+      }
+      removeButtonsFromPage(alertBtns, setState(() {}));
+      addAlertsToPage(alertBtns, setState(() {}));
+
+      removeButtonsFromPage(categoryBtns, setState(() {}));
+      addCategoriesToPage(categoryBtns, setState(() {}));
     });
   }
 
-  void addAlertsToPage(List<Widget> alertBtnsWidgets) {
-    for (AlertData alert in getAlerts()!) {
-      if (alertBtnsWidgets.length >= getAlerts()!.length) break;
-      alertBtnsWidgets.add(
-        AlertButton(
-          alertData: alert,
-        ),
-      );
+  void showAddCategoryBox() async {
+    var navigationResult = await showDialog(
+        context: context,
+        builder: (context) {
+          return const AddCategoryBox();
+        });
+    if (navigationResult == null) {
+      setState(() {
+        removeButtonsFromPage(categoryBtns, setState(() {}));
+        addCategoriesToPage(categoryBtns, setState(() {}));
+      });
     }
-    setState(() {});
   }
 
-  void removeAlertsFromPage(List<Widget> alertBtnsWidgets) {
-    alertBtnsWidgets.clear();
-    setState(() {});
+  @override
+  void dispose() {
+    _controller!.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: mainAppBar(context, SAVED_ALERTS),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: alertBtnsWidgets,
-          ),
-        ),
-      ),
+      appBar: savedAlertsAppBar(
+          context,
+          SAVED_ALERTS,
+          upperTab(
+            _controller!,
+            CATEGORIES_UI,
+          )),
+      body: upperTabViews(_controller!, categoryBtns, alertBtns),
       floatingActionButton: Transform.scale(
         scale: 1.15,
         child: FloatingActionButton(
-          onPressed: () {
-            Navigator.popAndPushNamed(context, "/newAlert");
-          },
+          onPressed: _selectedIndex == 1
+              ?
+              //if on "All" Tab move to add new alert
+              () {
+                  Navigator.pushNamed(context, NEW_ALERT_ROUTE);
+                }
+              :
+              //if on "Categories" tab move to add new category
+              () {
+                  showAddCategoryBox();
+                },
           backgroundColor: yellowColor,
           isExtended: true,
           child: Icon(
@@ -75,70 +102,6 @@ class _SavedAlertsState extends State<SavedAlerts> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-    );
-  }
-}
-
-class AlertButton extends StatefulWidget {
-  final AlertData alertData;
-
-  const AlertButton({
-    Key? key,
-    required this.alertData,
-  }) : super(key: key);
-
-  @override
-  State<AlertButton> createState() => _AlertButtonState();
-}
-
-class _AlertButtonState extends State<AlertButton> {
-  FutureOr onGoBack(dynamic value) {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AlertSettings(
-                alertId: widget.alertData.alertId,
-                alertName: widget.alertData.alertName,
-                alertIcon: IconData(widget.alertData.alertIcon,
-                    fontFamily: 'MaterialIcons'),
-                typeOfAlert: widget.alertData.typeOfAlert,
-                isSilenced: widget.alertData.isSilent,
-                alertCategory: widget.alertData.alertCategory,
-                alertPath: widget.alertData.alertPath,
-              ),
-            ),
-          ).then(onGoBack);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              widget.alertData.alertName,
-              style: mainButtonTextStyle(),
-              textAlign: TextAlign.right,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 40.0),
-              child: Icon(
-                IconData(widget.alertData.alertIcon,
-                    fontFamily: 'MaterialIcons'),
-                size: 60,
-                color: indigoColor,
-              ),
-            ),
-          ],
-        ),
-        style: mainButtonStyle(),
-      ),
     );
   }
 }

@@ -52,23 +52,29 @@ class AlertData {
 
 class CategoryData {
   String categoryName;
+  int categoryIcon;
 
   @override
   bool operator ==(Object other) =>
-      other is CategoryData && other.categoryName == categoryName;
+      other is CategoryData &&
+      (other.categoryName == categoryName ||
+          other.categoryIcon == categoryIcon);
 
   @override
-  int get hashCode => categoryName.hashCode;
+  int get hashCode => categoryIcon.hashCode;
 
   CategoryData({
     required this.categoryName,
+    required this.categoryIcon,
   });
 
   CategoryData.fromJson(Map<String, dynamic> json)
-      : categoryName = json[CATEGORY_NAME] as String;
+      : categoryName = json[CATEGORY_NAME] as String,
+        categoryIcon = json[CATEGORY_ICON] as int;
 
   Map<String, dynamic> toJson() => {
         CATEGORY_NAME: categoryName,
+        CATEGORY_ICON: categoryIcon,
       };
 }
 

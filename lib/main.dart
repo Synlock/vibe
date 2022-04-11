@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       routes: {
         HOME_ROUTE: (context) => const Homepage(),
         NEW_ALERT_ROUTE: (context) => const AddNewAlert(),
-        SAVED_ALERTS_ROUTE: (context) => const SavedAlerts(),
+        SAVED_ALERTS_ROUTE: (context) => const SavedAlerts(initialIndex: 1),
         SETTINGS_ROUTE: (context) => const Settings(),
       },
     );

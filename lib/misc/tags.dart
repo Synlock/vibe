@@ -6,6 +6,7 @@ const String LOGOUT = "Logout";
 const String VIBE = "Vibe";
 const String ADD_NEW_ALERT = "Add New Alert";
 const String SAVED_ALERTS = "Saved Alerts";
+const String SAVED_ALERTS_BY_CATEGORY = "Saved Alerts By Category";
 const String SETTINGS = "Settings";
 const String ALERT = "Alert Settings";
 
@@ -33,14 +34,17 @@ const String TYPE_OF_ALERT = "typeOfAlert";
 const String IS_SILENT = "isSilent";
 
 const String CATEGORY_NAME = "categoryName";
+const String CATEGORY_ICON = "categoryIcon";
 
 //Alert Page UI
 const String TYPE_OF_ALERT_UI = "Type of alert";
 const String SILENCE_THIS_ALERT_UI = "Silence this alert";
 const String UPDATE_THIS_ALERT_UI = "Update this alert";
 const String CATEGORY_UI = "Category";
+const String CATEGORIES_UI = "Categories";
 const String RERECORD = "Rerecord";
 const String ALERT_ICON_UI = "Alert icon";
+const String ALL_UI = "All";
 
 //Types of Alert Functions
 const String VIBRATE = "Vibrate";
@@ -71,11 +75,16 @@ const String ALERT_NAME_HINT = "Alert name";
 const String SAVE_NEW_ALERT = "Save new alert";
 const String UPDATE_ALERT = "Update alert";
 const String DELETE_ALERT = "Are you sure you want to delete this alert?";
+const String ADD_NEW_CATEGORY = "Add new category";
+const String CATEGORY_ICON_UI = "Category icon";
+const String UPDATE_CATEGORY = "Update category";
+const String NEW_CATEGORY_TEXT_HINT = "Enter new category name here";
 
 //File Management
 const String RECORDINGS_FOLDER_NAME = "Vibe Recordings";
 const String NEW_RECORDING_NAME = "New Alert";
 const String ALERTS_JSON_FILE_NAME = "alertsJson.json";
+const String CATEGORY_JSON_FILE_NAME = "categoriesJson.json";
 
 //Misc
 const String CATEGORY = "Category";
@@ -87,3 +96,4 @@ adipiscing elit.
 """;
 
 const int MAX_ALERTS = 20;
+const int MAX_CATEGORIES = 20;

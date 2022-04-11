@@ -83,13 +83,22 @@ Future<dynamic> getDecodedJson(String fileName) async {
 
 Future<void> renameAlertFile(String oldFilePath, Directory recordingsDirectory,
     String newFileName) async {
+  //TODO: handle if rename a file to the same name
   File alertFile = File(oldFilePath);
-  File renamedFile =
-      await alertFile.rename("${recordingsDirectory.path}/$newFileName.wav");
+  try {
+    File renamedFile =
+        await alertFile.rename("${recordingsDirectory.path}/$newFileName.wav");
+  } catch (e) {
+    print(e);
+  }
 }
 
 Future<void> deleteAlertFile(
     Directory recordingsDirectory, String fileName) async {
   File f = File("${recordingsDirectory.path}/$fileName.wav");
-  await f.delete();
+  try {
+    await f.delete();
+  } catch (e) {
+    print(e);
+  }
 }

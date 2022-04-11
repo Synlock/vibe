@@ -51,7 +51,7 @@ class _HomepageState extends State<Homepage> {
             ),
             homepageButton(
               context,
-              const SavedAlerts(),
+              const SavedAlerts(initialIndex: 1),
               SAVED_ALERTS,
               Icons.library_music,
             ),

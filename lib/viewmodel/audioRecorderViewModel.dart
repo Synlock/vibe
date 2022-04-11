@@ -33,9 +33,16 @@ Future<void> startRecording(Record record, String path) async {
       await record.start(path: path);
 
       Directory recordingsDirectory = Directory(getPathToRecordings());
-
+      int alertIndex = 0;
+      if (getAlerts()!.isEmpty) {
+        alertIndex = 0;
+      } else if (getAlerts()!.length == 1) {
+        alertIndex = 1;
+      } else {
+        alertIndex = getAlerts()!.length;
+      }
       getAlerts()!.add(AlertData(
-          alertId: getAlerts()!.length - 1,
+          alertId: alertIndex,
           alertName: ALERT_NAME,
           alertCategory: DEFAULT,
           alertIcon: getAlertIcons[0].codePoint,

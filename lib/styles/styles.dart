@@ -160,6 +160,14 @@ TextStyle? subAlertButtonTextStyle() {
   );
 }
 
+TextStyle? alertDropdownTextStyle() {
+  return const TextStyle(
+    color: Colors.black,
+    fontSize: 20.0,
+    fontWeight: FontWeight.w500,
+  );
+}
+
 TextStyle? saveCloudTextStyle() {
   return const TextStyle(
     color: Colors.white,

@@ -1,30 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
+import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
-class SaveNewAlertBox extends StatefulWidget {
-  final String alertName;
-  final String alertCategory;
-  final IconData iconData;
-
-  const SaveNewAlertBox({
+class AddCategoryBox extends StatefulWidget {
+  const AddCategoryBox({
     Key? key,
-    required this.alertName,
-    required this.alertCategory,
-    required this.iconData,
   }) : super(key: key);
 
   @override
-  State<SaveNewAlertBox> createState() => _SaveNewAlertBoxState();
+  State<AddCategoryBox> createState() => _AddCategoryBoxState();
 }
 
-class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
+class _AddCategoryBoxState extends State<AddCategoryBox> {
   TextEditingController nameController = TextEditingController();
-  String selectedCategory = getCategories()![0].categoryName;
-  IconData selectedIcon = getAlertIcons[0];
-  //AudioPlayer audioPlayer = AudioPlayer();
+  IconData selectedIcon = getCategoryIcons[0];
 
   @override
   Widget build(BuildContext context) {
@@ -32,27 +27,21 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
       actionsPadding:
           const EdgeInsets.only(right: 18.0, bottom: 18.0, left: 18.0),
       title: Text(
-        ADD_NEW_ALERT,
+        ADD_NEW_CATEGORY,
         style: homepageButtonTextStyle(),
         textAlign: TextAlign.right,
       ),
       actions: <Widget>[
         UpdateAlertNameTextField(
           nameController: nameController,
-          alertName: "Add new alert name here",
-        ),
-        CategoryDropdown(
-          onSelect: (String data) {
-            selectedCategory = data;
-          },
-          alertCategory: selectedCategory,
+          alertName: NEW_CATEGORY_TEXT_HINT,
         ),
         IconDropdown(
           onSelect: (IconData data) {
             selectedIcon = data;
           },
-          iconData: selectedIcon,
-          iconDropdownTitle: ALERT_ICON_UI,
+          iconData: getCategoryIcons[0],
+          iconDropdownTitle: CATEGORY_ICON_UI,
         ),
         //Save Button
         Row(
@@ -65,11 +54,15 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
               ),
               //Save Button
               onPressed: () async {
-                await setAlertData(
-                  getAlerts()!.last.alertId,
-                  nameController.text,
-                  selectedCategory,
-                  selectedIcon,
+                File jsonFile = await getJsonFile(CATEGORY_JSON_FILE_NAME);
+                final json = await getDecodedJson(CATEGORY_JSON_FILE_NAME);
+                getCategories()!.add(CategoryData(
+                    categoryName: nameController.text,
+                    categoryIcon: selectedIcon.codePoint));
+                await encodeJson(
+                  jsonFile,
+                  json,
+                  FileMode.write,
                 );
                 Navigator.pop(context);
               },
@@ -82,7 +75,6 @@ class _SaveNewAlertBoxState extends State<SaveNewAlertBox> {
                 style: popupTextStyle(),
               ),
               onPressed: () {
-                //TODO: create another popup with confirm delete
                 Navigator.pop(context);
               },
               style: popupButtonStyle(),

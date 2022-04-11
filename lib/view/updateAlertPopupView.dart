@@ -53,6 +53,7 @@ class _UpdateAlertBoxState extends State<UpdateAlertBox> {
             selectedIcon = data;
           },
           iconData: widget.iconData,
+          iconDropdownTitle: ALERT_ICON_UI,
         ),
         //Save Button
         Row(

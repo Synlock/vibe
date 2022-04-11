@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibe/misc/commonCalls.dart';
@@ -7,6 +9,7 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/view/confirmDeletePopupView.dart';
 import 'package:vibe/view/updateAlertPopupView.dart';
+import 'package:vibe/viewmodel/alertSettingsViewModel.dart';
 
 class AlertSettings extends StatefulWidget {
   int alertId;
@@ -36,20 +39,32 @@ class _AlertSettingsState extends State<AlertSettings> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+      final item = json[widget.alertId];
+      setState(() {
+        widget.isSilenced = item[IS_SILENT];
+        widget.typeOfAlert = item[TYPE_OF_ALERT];
+      });
+    });
   }
 
-  void setToggle(bool value) {
+  void setToggle(bool value) async {
+    File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+    final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+    final item = json[widget.alertId];
     if (!widget.isSilenced) {
       setState(() {
         widget.isSilenced = true;
-        //insert silence alarm here
+        item[IS_SILENT] = widget.isSilenced;
       });
     } else {
       setState(() {
         widget.isSilenced = false;
-        //insert silence off alarm here
+        item[IS_SILENT] = widget.isSilenced;
       });
     }
+    await encodeJson(jsonFile, json, FileMode.write);
   }
 
   void showAlertDetailsBox() async {
@@ -138,14 +153,31 @@ class _AlertSettingsState extends State<AlertSettings> {
                     alertButtonStyle()!,
                   ),
                   divider(),
-                  alertButton(
-                    () {},
-                    TYPE_OF_ALERT_UI,
-                    widget.typeOfAlert,
-                    alertButtonTextStyle()!,
-                    subAlertButtonTextStyle()!,
-                    alertButtonStyle()!,
-                  ),
+                  // alertButton(
+                  //   () {},
+                  //   TYPE_OF_ALERT_UI,
+                  //   widget.typeOfAlert,
+                  //   alertButtonTextStyle()!,
+                  //   subAlertButtonTextStyle()!,
+                  //   alertButtonStyle()!,
+                  // ),
+                  AlertTypeDropdown(
+                      onSelect: (String newOption) async {
+                        widget.typeOfAlert = newOption;
+                        File jsonFile =
+                            await getJsonFile(ALERTS_JSON_FILE_NAME);
+                        final json =
+                            await getDecodedJson(ALERTS_JSON_FILE_NAME);
+                        final item = json[widget.alertId];
+                        item[TYPE_OF_ALERT] = widget.typeOfAlert;
+
+                        await encodeJson(jsonFile, json, FileMode.write);
+
+                        setState(() {
+                          widget.typeOfAlert = newOption;
+                        });
+                      },
+                      alertType: widget.typeOfAlert),
                   divider(),
                   toggleButton(
                     SILENCE_THIS_ALERT_UI,

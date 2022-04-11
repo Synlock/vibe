@@ -5,6 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:vibe/misc/tags.dart';
+import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
@@ -79,8 +80,14 @@ class _AddNewAlertState extends State<AddNewAlert> {
         });
     if (navigationResults == null) {
       setState(() {
-        if (getAlerts()!.last.alertName == ALERT_NAME) {
-          setAlertData(NEW_RECORDING_NAME, DEFAULT, getAlertIcons[0]);
+        AlertData addedAlert = getAlerts()!.last;
+        if (addedAlert.alertName == ALERT_NAME) {
+          int alertIndex = addedAlert.alertId;
+          setAlertData(
+              alertIndex,
+              NEW_RECORDING_NAME + " " + alertIndex.toString(),
+              DEFAULT,
+              getAlertIcons[0]);
         }
       });
     }

@@ -11,6 +11,13 @@ List<IconData> getAlertIcons = [
   Icons.add,
   Icons.taxi_alert_outlined
 ];
+List<IconData> getCategoryIcons = [
+  Icons.access_alarm_rounded,
+  Icons.door_back_door_outlined,
+  Icons.sensors_rounded,
+  Icons.add,
+  Icons.taxi_alert_outlined
+];
 
 class CategoryDropdown extends StatefulWidget {
   Function(String) onSelect;
@@ -91,10 +98,12 @@ class _UpdateAlertNameTextFieldState extends State<UpdateAlertNameTextField> {
 class IconDropdown extends StatefulWidget {
   Function(IconData) onSelect;
   IconData iconData;
+  String iconDropdownTitle;
   IconDropdown({
     Key? key,
     required this.onSelect,
     required this.iconData,
+    required this.iconDropdownTitle,
   }) : super(key: key);
 
   @override
@@ -127,7 +136,7 @@ class _IconDropdownState extends State<IconDropdown> {
           },
         ),
         Text(
-          ALERT_ICON_UI,
+          widget.iconDropdownTitle,
           style: alertButtonTextStyle(),
         ),
       ],

@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
-import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/initApplicationViewModel.dart';
-import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -82,48 +78,5 @@ class VibeLogo extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class InitApplication extends StatefulWidget {
-  final AnimationController animationController;
-  const InitApplication({
-    Key? key,
-    required this.animationController,
-  }) : super(key: key);
-
-  @override
-  State<InitApplication> createState() => _InitApplicationState();
-}
-
-class _InitApplicationState extends State<InitApplication> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      widget.animationController.stop();
-      bool approved = await getPermissions();
-
-      await setRecordingsDirectory();
-      initCategoryList();
-
-      if (approved) {
-        widget.animationController.forward();
-      }
-
-      Directory recordingsDir = Directory(getPathToRecordings());
-      if (recordingsDir.listSync().isEmpty) return;
-
-      await populateAlertsList("temp");
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.animationController.isCompleted
-        ? CircularProgressIndicator.adaptive(
-            backgroundColor: yellowColor,
-          )
-        : Container();
   }
 }
