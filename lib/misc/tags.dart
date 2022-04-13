@@ -105,6 +105,17 @@ sit amet, consectetur
 adipiscing elit.
 """;
 
+//Data Tagging Model
+//Alert Tagging
+const String USER_ID = "userId";
+const String AUDIO_CLIP = "audioClip";
+const String CLIP_LABEL = "clipLabel";
+const String RESPONSE_INDEX = "response";
+const String TIME_STAMP = "timeStamp";
+//Data Tags
+const String DATA_TAG_INDEX = "index";
+const String DATA_TAG_NAME = "tagName";
+
 //Ints
 const int MAX_ALERTS = 20;
 const int MAX_CATEGORIES = 20;

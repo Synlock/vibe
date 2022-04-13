@@ -5,8 +5,11 @@ import 'package:vibe/view/homepageView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
 import 'package:vibe/view/splashScreenView.dart';
+import 'package:vibe/DB/mongo.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Mongo.openConnection();
   runApp(const MyApp());
 }
 

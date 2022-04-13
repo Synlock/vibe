@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:move_to_background/move_to_background.dart';
 import 'package:vibe/styles/buttons.dart';
@@ -5,9 +7,10 @@ import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/addNewAlertView.dart';
+import 'package:vibe/view/dataTaggingPopupView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
-import 'package:vibe/viewmodel/micStreamViewModel.dart';
+//import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -17,15 +20,15 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  StartMicStreamState micStream = StartMicStreamState();
   IconData icon = Icons.square_rounded;
   Color iconColor = Colors.black;
+  //list of UInt8List - List of list<int> - List of int <- this is needed
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      //micStream.isRecording = true;
-      //micStream.controlMicStream(command: Command.start);
+      //initSoundStream();
     });
   }
 
@@ -64,19 +67,8 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // micStream.isRecording = !micStream.isRecording;
-
-            // if (micStream.isRecording) {
-            //   micStream.controlMicStream(command: Command.start);
-            //   icon = Icons.square_rounded;
-            //   iconColor = Colors.black;
-            // } else {
-            //   micStream.controlMicStream(command: Command.stop);
-            //   icon = Icons.fiber_manual_record;
-            //   iconColor = Colors.red;
-            // }
-            // setState(() {});
+          onPressed: () async {
+            showDataTaggingBox(context);
           },
           child: Icon(
             icon,
@@ -86,4 +78,17 @@ class _HomepageState extends State<Homepage> {
       ),
     );
   }
+}
+
+void showDataTaggingBox(BuildContext context) async {
+  var navigationResult = await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      return const DataTaggingPopup(
+        alertIcon: Icons.access_alarm,
+        alertName: "Alarm",
+      );
+    },
+  );
 }

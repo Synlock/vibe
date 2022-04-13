@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
 import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
 import 'package:mic_stream/mic_stream.dart';
+import 'package:sound_stream/sound_stream.dart';
 
 enum Command {
   start,
@@ -381,7 +383,7 @@ class StartMicStreamState extends State<StartMicStream>
       }
       first = !first;
     }
-    print(visibleSamples);
+    //print(visibleSamples);
   }
 
   bool stopListening() {
@@ -419,5 +421,30 @@ class StartMicStreamState extends State<StartMicStream>
   @override
   Widget build(BuildContext context) {
     return Container();
+  }
+}
+
+class SoundStream {
+  final RecorderStream recorder = RecorderStream();
+
+  List<Uint8List> micChunks = [];
+  bool isRecording = false;
+
+  StreamSubscription? recorderStatus;
+  StreamSubscription? audioStream;
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlugin() async {
+    recorderStatus = recorder.status.listen((status) {
+      isRecording = status == SoundStreamStatus.Playing;
+    });
+
+    audioStream = recorder.audioStream.listen((data) {
+      micChunks.add(data);
+    });
+
+    await Future.wait([
+      recorder.initialize(),
+    ]);
   }
 }

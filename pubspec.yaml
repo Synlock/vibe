@@ -45,6 +45,8 @@ dependencies:
   mic_stream: ^0.6.0
   vibration: ^1.7.3
   torch_light: ^0.4.0
+  sound_stream: ^0.3.0
+  mongo_dart: ^0.7.4+1
 
 dev_dependencies:
   flutter_test:

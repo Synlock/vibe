@@ -3,6 +3,7 @@ import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
+import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -13,10 +14,25 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   //TODO:// move functions to viewmodel
+  bool isSilent = true;
   bool isSilenceFrom = true;
   bool isDoNotDisturb = true;
   bool isSync = false;
   bool isSaveHistory = false;
+
+  void setIsSilent(bool value) {
+    if (!isSilent) {
+      setState(() {
+        isSilent = true;
+        streamRecorderController(false);
+      });
+    } else {
+      setState(() {
+        isSilent = false;
+        streamRecorderController(true);
+      });
+    }
+  }
 
   void setIsSilenceFrom(bool value) {
     if (!isSilenceFrom) {
@@ -112,57 +128,73 @@ class _SettingsState extends State<Settings> {
               )
             ],
           ),
-          Column(
-            children: [
-              alertButton(
-                () {},
-                DEFAULT_ALERT_TYPE,
-                VIBRATE, //<<make this arg dynamic
-                alertButtonTextStyle()!,
-                subAlertButtonTextStyle()!,
-                alertButtonStyle()!,
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  alertButton(
+                    () {},
+                    DEFAULT_ALERT_TYPE,
+                    VIBRATE, //<<make this arg dynamic
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    IS_SILENT,
+                    "",
+                    isSilent,
+                    setIsSilent,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    settingsButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    SILENCE_FROM_TIME,
+                    "23:00",
+                    isSilenceFrom,
+                    setIsSilenceFrom,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    settingsButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    DO_NOT_DISTURB,
+                    ONLY_EMERGENCY_ALERTS, //<<make this arg dynamic
+                    isDoNotDisturb,
+                    setIsDoNotDisturb,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    settingsButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    SYNC_WITH_OTHER_DEVICES,
+                    SYNC_SUBTEXT,
+                    isSync,
+                    setIsSync,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    settingsButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    SAVE_ALERT_HISTORY,
+                    "",
+                    isSaveHistory,
+                    setIsSaveHistory,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    settingsButtonStyle()!,
+                  ),
+                ],
               ),
-              divider(),
-              toggleButton(
-                SILENCE_FROM_TIME,
-                "23:00",
-                isSilenceFrom,
-                setIsSilenceFrom,
-                alertButtonTextStyle()!,
-                subAlertButtonTextStyle()!,
-                settingsButtonStyle()!,
-              ),
-              divider(),
-              toggleButton(
-                DO_NOT_DISTURB,
-                ONLY_EMERGENCY_ALERTS, //<<make this arg dynamic
-                isDoNotDisturb,
-                setIsDoNotDisturb,
-                alertButtonTextStyle()!,
-                subAlertButtonTextStyle()!,
-                settingsButtonStyle()!,
-              ),
-              divider(),
-              toggleButton(
-                SYNC_WITH_OTHER_DEVICES,
-                SYNC_SUBTEXT,
-                isSync,
-                setIsSync,
-                alertButtonTextStyle()!,
-                subAlertButtonTextStyle()!,
-                settingsButtonStyle()!,
-              ),
-              divider(),
-              toggleButton(
-                SAVE_ALERT_HISTORY,
-                "",
-                isSaveHistory,
-                setIsSaveHistory,
-                alertButtonTextStyle()!,
-                subAlertButtonTextStyle()!,
-                settingsButtonStyle()!,
-              ),
-            ],
+            ),
           )
         ],
       ),
