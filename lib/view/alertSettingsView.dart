@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
+import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
+import 'package:vibe/view/alertBannerView.dart';
 import 'package:vibe/view/confirmDeletePopupView.dart';
 import 'package:vibe/view/updateAlertPopupView.dart';
-import 'package:vibe/viewmodel/alertSettingsViewModel.dart';
 
 class AlertSettings extends StatefulWidget {
   int alertId;
   String alertName;
   IconData alertIcon;
-  String typeOfAlert;
-  bool isSilenced;
+  AlertBehavior alertBehavior;
   String alertCategory;
   String alertPath;
   AlertSettings({
@@ -24,8 +24,7 @@ class AlertSettings extends StatefulWidget {
     required this.alertId,
     required this.alertName,
     required this.alertIcon,
-    required this.typeOfAlert,
-    required this.isSilenced,
+    required this.alertBehavior,
     required this.alertCategory,
     required this.alertPath,
   }) : super(key: key);
@@ -43,25 +42,96 @@ class _AlertSettingsState extends State<AlertSettings> {
       final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
       final item = json[widget.alertId];
       setState(() {
-        widget.isSilenced = item[IS_SILENT];
-        widget.typeOfAlert = item[TYPE_OF_ALERT];
+        //widget.alertBehavior = item[TYPE_OF_ALERT][];
       });
     });
   }
 
-  void setToggle(bool value) async {
+  void setFullPageToggle(bool value) async {
     File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
     final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-    final item = json[widget.alertId];
-    if (!widget.isSilenced) {
+    final item = json[widget.alertId][ALERT_BEHAVIOR];
+    if (!widget.alertBehavior.isFullPage) {
       setState(() {
-        widget.isSilenced = true;
-        item[IS_SILENT] = widget.isSilenced;
+        widget.alertBehavior.isFullPage = true;
+        item[IS_FULL_PAGE] = widget.alertBehavior.isFullPage;
       });
     } else {
       setState(() {
-        widget.isSilenced = false;
-        item[IS_SILENT] = widget.isSilenced;
+        widget.alertBehavior.isFullPage = false;
+        item[IS_FULL_PAGE] = widget.alertBehavior.isFullPage;
+      });
+    }
+    await encodeJson(jsonFile, json, FileMode.write);
+  }
+
+  void setSoundToggle(bool value) async {
+    File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+    final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+    final item = json[widget.alertId][ALERT_BEHAVIOR];
+    if (!widget.alertBehavior.isSound) {
+      setState(() {
+        widget.alertBehavior.isSound = true;
+        item[IS_SOUND] = widget.alertBehavior.isSound;
+      });
+    } else {
+      setState(() {
+        widget.alertBehavior.isSound = false;
+        item[IS_SOUND] = widget.alertBehavior.isSound;
+      });
+    }
+    await encodeJson(jsonFile, json, FileMode.write);
+  }
+
+  void setVibrateToggle(bool value) async {
+    File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+    final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+    final item = json[widget.alertId][ALERT_BEHAVIOR];
+    if (!widget.alertBehavior.isVibrate) {
+      setState(() {
+        widget.alertBehavior.isVibrate = true;
+        item[IS_VIBRATE] = widget.alertBehavior.isVibrate;
+      });
+    } else {
+      setState(() {
+        widget.alertBehavior.isVibrate = false;
+        item[IS_VIBRATE] = widget.alertBehavior.isVibrate;
+      });
+    }
+    await encodeJson(jsonFile, json, FileMode.write);
+  }
+
+  void setFlashToggle(bool value) async {
+    File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+    final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+    final item = json[widget.alertId][ALERT_BEHAVIOR];
+    if (!widget.alertBehavior.isFlash) {
+      setState(() {
+        widget.alertBehavior.isFlash = true;
+        item[IS_FLASH] = widget.alertBehavior.isFlash;
+      });
+    } else {
+      setState(() {
+        widget.alertBehavior.isFlash = false;
+        item[IS_FLASH] = widget.alertBehavior.isFlash;
+      });
+    }
+    await encodeJson(jsonFile, json, FileMode.write);
+  }
+
+  void setSilenceToggle(bool value) async {
+    File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+    final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+    final item = json[widget.alertId][ALERT_BEHAVIOR];
+    if (!widget.alertBehavior.isSilent) {
+      setState(() {
+        widget.alertBehavior.isSilent = true;
+        item[IS_SILENT] = widget.alertBehavior.isSilent;
+      });
+    } else {
+      setState(() {
+        widget.alertBehavior.isSilent = false;
+        item[IS_SILENT] = widget.alertBehavior.isSilent;
       });
     }
     await encodeJson(jsonFile, json, FileMode.write);
@@ -97,6 +167,28 @@ class _AlertSettingsState extends State<AlertSettings> {
           return ConfirmDeleteAlertBox(
             alertId: widget.alertId,
             alertName: widget.alertName,
+          );
+        });
+    if (navigationResult == null) {
+      setState(() {});
+    }
+  }
+
+  void showAlertBox() async {
+    var navigationResult = await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertPopup(
+            alert: AlertData(
+              alertId: widget.alertId,
+              alertName: widget.alertName,
+              alertCategory: widget.alertCategory,
+              alertIcon: widget.alertIcon.codePoint,
+              alertDuration: 0,
+              alertPath: widget.alertPath,
+              alertBehavior: widget.alertBehavior,
+            ),
           );
         });
     if (navigationResult == null) {
@@ -142,9 +234,26 @@ class _AlertSettingsState extends State<AlertSettings> {
                   ),
                   alertButton(
                     () async {
-                      await _player.setAudioSource(
-                          AudioSource.uri(Uri.parse(widget.alertPath)));
-                      await _player.play();
+                      // await _player.setAudioSource(
+                      //     AudioSource.uri(Uri.parse(widget.alertPath)));
+                      // await _player.play();
+                      widget.alertBehavior.isFullPage
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AlertBanner(
+                                        alert: AlertData(
+                                          alertId: widget.alertId,
+                                          alertName: widget.alertName,
+                                          alertCategory: widget.alertCategory,
+                                          alertIcon: widget.alertIcon.codePoint,
+                                          alertDuration: 0,
+                                          alertPath: widget.alertPath,
+                                          alertBehavior: widget.alertBehavior,
+                                        ),
+                                      )),
+                            )
+                          : showAlertBox();
                     },
                     PLAY,
                     "",
@@ -161,29 +270,68 @@ class _AlertSettingsState extends State<AlertSettings> {
                   //   subAlertButtonTextStyle()!,
                   //   alertButtonStyle()!,
                   // ),
-                  AlertTypeDropdown(
-                      onSelect: (String newOption) async {
-                        widget.typeOfAlert = newOption;
-                        File jsonFile =
-                            await getJsonFile(ALERTS_JSON_FILE_NAME);
-                        final json =
-                            await getDecodedJson(ALERTS_JSON_FILE_NAME);
-                        final item = json[widget.alertId];
-                        item[TYPE_OF_ALERT] = widget.typeOfAlert;
+                  // AlertTypeDropdown(
+                  //     onSelect: (String newOption) async {
+                  //       widget.alertBehavior = newOption;
+                  //       File jsonFile =
+                  //           await getJsonFile(ALERTS_JSON_FILE_NAME);
+                  //       final json =
+                  //           await getDecodedJson(ALERTS_JSON_FILE_NAME);
+                  //       final item = json[widget.alertId];
+                  //       item[TYPE_OF_ALERT] = widget.alertBehavior;
 
-                        await encodeJson(jsonFile, json, FileMode.write);
+                  //       await encodeJson(jsonFile, json, FileMode.write);
 
-                        setState(() {
-                          widget.typeOfAlert = newOption;
-                        });
-                      },
-                      alertType: widget.typeOfAlert),
+                  //       setState(() {
+                  //         widget.alertBehavior = newOption;
+                  //       });
+                  //     },
+                  //     alertType: widget.alertBehavior),
+                  toggleButton(
+                    IS_FULL_PAGE_UI,
+                    "",
+                    widget.alertBehavior.isFullPage,
+                    setFullPageToggle,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    IS_SOUND_UI,
+                    "",
+                    widget.alertBehavior.isSound,
+                    setSoundToggle,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    IS_VIBRATE_UI,
+                    "",
+                    widget.alertBehavior.isVibrate,
+                    setVibrateToggle,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
+                  divider(),
+                  toggleButton(
+                    IS_FLASH_UI,
+                    "",
+                    widget.alertBehavior.isFlash,
+                    setFlashToggle,
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
                   divider(),
                   toggleButton(
                     SILENCE_THIS_ALERT_UI,
                     "",
-                    widget.isSilenced,
-                    setToggle,
+                    widget.alertBehavior.isSilent,
+                    setSilenceToggle,
                     alertButtonTextStyle()!,
                     subAlertButtonTextStyle()!,
                     alertButtonStyle()!,

@@ -24,8 +24,8 @@ class _HomepageState extends State<Homepage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      micStream.isRecording = true;
-      micStream.controlMicStream(command: Command.start);
+      //micStream.isRecording = true;
+      //micStream.controlMicStream(command: Command.start);
     });
   }
 
@@ -65,18 +65,18 @@ class _HomepageState extends State<Homepage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            micStream.isRecording = !micStream.isRecording;
+            // micStream.isRecording = !micStream.isRecording;
 
-            if (micStream.isRecording) {
-              micStream.controlMicStream(command: Command.start);
-              icon = Icons.square_rounded;
-              iconColor = Colors.black;
-            } else {
-              micStream.controlMicStream(command: Command.stop);
-              icon = Icons.fiber_manual_record;
-              iconColor = Colors.red;
-            }
-            setState(() {});
+            // if (micStream.isRecording) {
+            //   micStream.controlMicStream(command: Command.start);
+            //   icon = Icons.square_rounded;
+            //   iconColor = Colors.black;
+            // } else {
+            //   micStream.controlMicStream(command: Command.stop);
+            //   icon = Icons.fiber_manual_record;
+            //   iconColor = Colors.red;
+            // }
+            // setState(() {});
           },
           child: Icon(
             icon,

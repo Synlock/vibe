@@ -7,8 +7,7 @@ class AlertData {
   int alertIcon;
   int alertDuration;
   String alertPath;
-  String typeOfAlert;
-  bool isSilent;
+  AlertBehavior alertBehavior;
 
   @override
   bool operator ==(Object other) =>
@@ -24,8 +23,7 @@ class AlertData {
     required this.alertIcon,
     required this.alertDuration,
     required this.alertPath,
-    required this.typeOfAlert,
-    required this.isSilent,
+    required this.alertBehavior,
   });
 
   AlertData.fromJson(Map<String, dynamic> json)
@@ -35,8 +33,7 @@ class AlertData {
         alertIcon = json[ALERT_ICON] as int,
         alertDuration = json[ALERT_DURATION] as int,
         alertPath = json[ALERT_PATH] as String,
-        typeOfAlert = json[TYPE_OF_ALERT] as String,
-        isSilent = json[IS_SILENT] as bool;
+        alertBehavior = json[ALERT_BEHAVIOR] as AlertBehavior;
 
   Map<String, dynamic> toJson() => {
         ALERT_ID: alertId,
@@ -45,8 +42,7 @@ class AlertData {
         ALERT_ICON: alertIcon,
         ALERT_DURATION: alertDuration,
         ALERT_PATH: alertPath,
-        TYPE_OF_ALERT: typeOfAlert,
-        IS_SILENT: isSilent,
+        ALERT_BEHAVIOR: alertBehavior,
       };
 }
 
@@ -78,5 +74,37 @@ class CategoryData {
       };
 }
 
+class AlertBehavior {
+  bool isFullPage;
+  bool isSound;
+  bool isVibrate;
+  bool isFlash;
+  bool isSilent;
+
+  AlertBehavior({
+    required this.isFullPage,
+    required this.isSound,
+    required this.isVibrate,
+    required this.isFlash,
+    required this.isSilent,
+  });
+
+  AlertBehavior.fromJson(Map<String, dynamic> json)
+      : isFullPage = json[IS_FULL_PAGE] as bool,
+        isSound = json[IS_SOUND] as bool,
+        isVibrate = json[IS_VIBRATE] as bool,
+        isFlash = json[IS_FLASH] as bool,
+        isSilent = json[IS_SILENT] as bool;
+
+  Map<String, dynamic> toJson() => {
+        IS_FULL_PAGE: isFullPage,
+        IS_SOUND: isSound,
+        IS_VIBRATE: isVibrate,
+        IS_FLASH: isFlash,
+        IS_SILENT: isSilent,
+      };
+}
+
 List<AlertData> alerts = [];
 List<CategoryData> categories = [];
+List<AlertBehavior> alertBehaviors = [];

@@ -111,8 +111,8 @@ Future<bool> setRecordingsDirectory() async {
 
 Future<List<CategoryData>> initCategoryList() async {
   final File categoryJsonFile = await getJsonFile(CATEGORY_JSON_FILE_NAME);
-
-  if (await categoryJsonFile.readAsString() == "") {
+  String fileContents = await categoryJsonFile.readAsString();
+  if (fileContents == "" || fileContents == "[]") {
     getCategories()!.add(CategoryData(
       categoryName: DEFAULT,
       categoryIcon: getCategoryIcons[0].codePoint,
@@ -137,7 +137,6 @@ Future<List<CategoryData>> initCategoryList() async {
     }
   } else {
     final json = await getDecodedJson(CATEGORY_JSON_FILE_NAME);
-    print(json);
     for (var i = 0; i < MAX_CATEGORIES; i++) {
       if (i >= json.length) break;
 

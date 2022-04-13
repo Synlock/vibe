@@ -198,13 +198,13 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                 height: 100,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(100),
+                  borderRadius: BorderRadius.circular(50),
                 ),
                 child: IconButton(
                   icon: AnimatedContainer(
                     width: 60,
                     height: 60,
-                    duration: const Duration(seconds: 1),
+                    duration: const Duration(milliseconds: 500),
                     decoration: BoxDecoration(
                       color: getRecordButtonColor(),
                       borderRadius: getRecordButtonBorderRadius(),

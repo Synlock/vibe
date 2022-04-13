@@ -55,13 +55,12 @@ class _AddCategoryBoxState extends State<AddCategoryBox> {
               //Save Button
               onPressed: () async {
                 File jsonFile = await getJsonFile(CATEGORY_JSON_FILE_NAME);
-                final json = await getDecodedJson(CATEGORY_JSON_FILE_NAME);
                 getCategories()!.add(CategoryData(
                     categoryName: nameController.text,
                     categoryIcon: selectedIcon.codePoint));
                 await encodeJson(
                   jsonFile,
-                  json,
+                  getCategories()!.map((e) => e.toJson()).toList(),
                   FileMode.write,
                 );
                 Navigator.pop(context);

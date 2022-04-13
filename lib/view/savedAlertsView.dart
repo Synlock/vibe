@@ -24,7 +24,7 @@ class _SavedAlertsState extends State<SavedAlerts>
   @override
   void initState() {
     super.initState();
-
+    //init tab controller to get access to page index
     _controller = TabController(
         initialIndex: widget.initialIndex, length: 2, vsync: this);
     _controller!.addListener(() {
@@ -32,14 +32,13 @@ class _SavedAlertsState extends State<SavedAlerts>
         _selectedIndex = _controller!.index;
       });
     });
+    //make sure that floating button works properly on each page
+    _controller!.index == 0 ? _selectedIndex = 0 : _selectedIndex = 1;
 
+    //remove and add the buttons to properly show the updated buttons from the content
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      try {
-        final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-        print(json);
-      } catch (e) {
-        print(e);
-      }
+      final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+      print(json);
       removeButtonsFromPage(alertBtns, setState(() {}));
       addAlertsToPage(alertBtns, setState(() {}));
 

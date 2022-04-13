@@ -15,12 +15,11 @@ import 'package:vibe/viewmodel/popupViewModel.dart';
 
 List<AlertData>? getAlerts() => alerts;
 List<CategoryData>? getCategories() => categories;
+List<AlertBehavior>? getAlertBehaviors() => alertBehaviors;
 
 int alertIndex = 0;
 Future<bool> populateAlertsList(String? path) async {
-  File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
   final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-  print(json);
   Directory directory = Directory(getPathToRecordings());
 
   FileSystemEntity fileInDirectory = File("");
@@ -29,16 +28,21 @@ Future<bool> populateAlertsList(String? path) async {
     if (fileInDirectory.path == path) break;
 
     final item = json[i];
-
+    final alertBehavior = item[ALERT_BEHAVIOR];
     getAlerts()!.add(AlertData(
       alertId: item[ALERT_ID],
       alertName: item[ALERT_NAME],
       alertCategory: item[ALERT_CATEGORY],
       alertIcon: item[ALERT_ICON],
       alertDuration: 0, //item[ALERT_DURATION],
-      alertPath: fileInDirectory.path,
-      typeOfAlert: item[TYPE_OF_ALERT],
-      isSilent: item[IS_SILENT],
+      alertPath: item[ALERT_PATH],
+      alertBehavior: AlertBehavior(
+        isFullPage: alertBehavior[IS_FULL_PAGE],
+        isSound: alertBehavior[IS_SOUND],
+        isVibrate: alertBehavior[IS_VIBRATE],
+        isFlash: alertBehavior[IS_FLASH],
+        isSilent: alertBehavior[IS_SILENT],
+      ),
     ));
     alertIndex++;
   }
@@ -66,12 +70,17 @@ Future<void> setAlertData(
   alertToChange.alertIcon = alertIcon.codePoint;
   //alertToChange.alertDuration = duration!.inSeconds;
 
-  renameAlertFile("${recordingsDirectory.path}/${alertToChange.alertId}.wav",
-      recordingsDirectory, alertToChange.alertName);
-  alertToChange.alertPath = recordingsDirectory.listSync().last.path;
+  await renameAlertFile(
+      "${recordingsDirectory.path}/${alertToChange.alertId}.wav",
+      recordingsDirectory,
+      alertToChange.alertName);
 
-  alertToChange.typeOfAlert = MEDIUM;
-  alertToChange.isSilent = false;
+  alertToChange.alertPath = recordingsDirectory
+      .listSync()
+      .firstWhere((element) => element.path.contains(alertToChange.alertName))
+      .path;
+
+  setAlertBehaviorToDefault(alertToChange);
 
   File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
   await encodeJson(
@@ -115,7 +124,6 @@ Future<void> updateAlertData(
 
 Future<void> updateCategoryData(
     String categoryName, String newName, IconData newIcon) async {
-  Directory recordingsDirectory = Directory(getPathToRecordings());
   CategoryData categoryToChange = getCategories()!
       .firstWhere((element) => element.categoryName == categoryName);
 
@@ -175,6 +183,14 @@ findCategoryAlerts(List<Widget> buttons, String categoryName) {
       buttons.add(AlertButton(alertData: alert));
     }
   }
+}
+
+void setAlertBehaviorToDefault(AlertData alert) {
+  alert.alertBehavior.isFullPage = false;
+  alert.alertBehavior.isSound = false;
+  alert.alertBehavior.isVibrate = false;
+  alert.alertBehavior.isFlash = false;
+  alert.alertBehavior.isSilent = false;
 }
 
 TabBar upperTab(TabController controller, String categoryTabName) => TabBar(
@@ -264,8 +280,7 @@ class _AlertButtonState extends State<AlertButton> {
                 alertName: widget.alertData.alertName,
                 alertIcon: IconData(widget.alertData.alertIcon,
                     fontFamily: 'MaterialIcons'),
-                typeOfAlert: widget.alertData.typeOfAlert,
-                isSilenced: widget.alertData.isSilent,
+                alertBehavior: widget.alertData.alertBehavior,
                 alertCategory: widget.alertData.alertCategory,
                 alertPath: widget.alertData.alertPath,
               ),

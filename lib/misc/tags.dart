@@ -24,20 +24,30 @@ const String DELETE = "Delete";
 const String PLAY = "Play alert";
 
 //Saved Alerts Model
+//Alerts
 const String ALERT_ID = "alertId";
 const String ALERT_NAME = "alertName";
 const String ALERT_CATEGORY = "alertCategory";
 const String ALERT_ICON = "alertIcon";
 const String ALERT_DURATION = "alertDuration";
 const String ALERT_PATH = "alertPath";
-const String TYPE_OF_ALERT = "typeOfAlert";
+const String ALERT_BEHAVIOR = "alertBehavior";
 const String IS_SILENT = "isSilent";
-
+//Categories
 const String CATEGORY_NAME = "categoryName";
 const String CATEGORY_ICON = "categoryIcon";
+//Behaviors
+const String IS_FULL_PAGE = "isFullPage";
+const String IS_SOUND = "isSound";
+const String IS_VIBRATE = "isVibrate";
+const String IS_FLASH = "isFlash";
 
 //Alert Page UI
 const String TYPE_OF_ALERT_UI = "Type of alert";
+const String IS_FULL_PAGE_UI = "Will be popup or fullscreen alert";
+const String IS_SOUND_UI = "Will this alert play sound?";
+const String IS_VIBRATE_UI = "Will this alert vibrate?";
+const String IS_FLASH_UI = "Will this alert flash?";
 const String SILENCE_THIS_ALERT_UI = "Silence this alert";
 const String UPDATE_THIS_ALERT_UI = "Update this alert";
 const String CATEGORY_UI = "Category";
@@ -95,5 +105,6 @@ sit amet, consectetur
 adipiscing elit.
 """;
 
+//Ints
 const int MAX_ALERTS = 20;
 const int MAX_CATEGORIES = 20;

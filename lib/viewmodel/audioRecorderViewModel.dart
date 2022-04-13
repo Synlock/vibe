@@ -41,15 +41,22 @@ Future<void> startRecording(Record record, String path) async {
       } else {
         alertIndex = getAlerts()!.length;
       }
-      getAlerts()!.add(AlertData(
-          alertId: alertIndex,
-          alertName: ALERT_NAME,
-          alertCategory: DEFAULT,
-          alertIcon: getAlertIcons[0].codePoint,
-          alertDuration: 0,
-          typeOfAlert: DEFAULT_ALERT_TYPE,
-          isSilent: false,
-          alertPath: recordingsDirectory.path));
+      getAlerts()!.add(
+        AlertData(
+            alertId: alertIndex,
+            alertName: ALERT_NAME,
+            alertCategory: DEFAULT,
+            alertIcon: getAlertIcons[0].codePoint,
+            alertDuration: 0,
+            alertBehavior: AlertBehavior(
+              isFullPage: false,
+              isSound: false,
+              isVibrate: false,
+              isFlash: false,
+              isSilent: false,
+            ),
+            alertPath: recordingsDirectory.path),
+      );
     }
   } catch (e) {
     print(e);
