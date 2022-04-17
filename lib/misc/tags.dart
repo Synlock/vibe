@@ -104,6 +104,7 @@ Lorem ipsum dolor
 sit amet, consectetur 
 adipiscing elit.
 """;
+const String CORRECT_DETECTION = "Was this detection correct?";
 
 //Data Tagging Model
 //Alert Tagging
@@ -119,3 +120,23 @@ const String DATA_TAG_NAME = "tagName";
 //Ints
 const int MAX_ALERTS = 20;
 const int MAX_CATEGORIES = 20;
+
+//Predefined Sounds Strings
+const String RED_ALERT = "אזעקת צבע אדום";
+const String SHOOTING = "ירי";
+const String SIREN = "סירנה";
+const String DOORBELL = "פעמון דלת";
+const String LOUD_SOUND = "סאונד חזק";
+const String MICROWAVE = "מיקרו";
+const String WASHING_MACHINE = "מכונת כביסה";
+const String DOOR_KNOCK = "דפיקה בדלת";
+const String GLASS_BREAKING = "זכוכית נשברת";
+const String ITEM_FALL = "משהו נפל";
+const String DOOR_SLAMMING = "דלת נטרקת";
+const String DRYER = "מייבש";
+const String DOG_BARKING = "כלב נובח";
+const String BABY_CRYING = "תינוק בוכה";
+const String WATER_RUNNING = "מים זורמים";
+const String CRYING = "בכי";
+const String SHOUTING = "צעקות";
+const String CALL_BY_NAME = "קריאה בשם";

@@ -20,16 +20,16 @@ class _SettingsState extends State<Settings> {
   bool isSync = false;
   bool isSaveHistory = false;
 
-  void setIsSilent(bool value) {
+  void setIsSilent(bool value) async {
     if (!isSilent) {
+      stream1RecorderController();
       setState(() {
         isSilent = true;
-        streamRecorderController(false);
       });
     } else {
+      stopRecorders();
       setState(() {
         isSilent = false;
-        streamRecorderController(true);
       });
     }
   }

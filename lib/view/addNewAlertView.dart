@@ -10,6 +10,7 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
+import 'package:vibe/viewmodel/micStreamViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -120,21 +121,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
             Container(
               height: 130,
             ),
-            const Text(
-              ADD_NEW_ALERT_INSTRUCTION_TEXT,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-              ),
-            ),
-            const Icon(
-              Icons.touch_app,
-              color: Colors.white,
-              size: 70,
-            ),
-            Container(
-              height: 100,
-            ),
+            const MyMicStream(),
             getDirectoryLength() >= MAX_ALERTS
                 ? const Text(
                     "Too many alerts, please delete some, max = $MAX_ALERTS")
@@ -142,7 +129,8 @@ class _AddNewAlertState extends State<AddNewAlert> {
                     stopWatchTimer: stopWatchTimer,
                     record: record,
                     displayStopwatch: displayStopWatch,
-                    stopRecord: stopRecord),
+                    stopRecord: stopRecord,
+                  ),
           ],
         ),
       ),
@@ -215,7 +203,6 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                   splashColor: Colors.transparent,
                   onPressed: () {
                     setIsRecording(!getIsRecording());
-
                     setState(() {
                       if (getIsRecording()) {
                         startRecord(widget.stopWatchTimer, widget.record);
@@ -237,6 +224,33 @@ class _RecorderWidgetState extends State<RecorderWidget> {
               color: Colors.white,
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class InstructRecord extends StatelessWidget {
+  const InstructRecord({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text(
+          ADD_NEW_ALERT_INSTRUCTION_TEXT,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
+        const Icon(
+          Icons.touch_app,
+          color: Colors.white,
+          size: 70,
+        ),
+        Container(
+          height: 100,
         ),
       ],
     );

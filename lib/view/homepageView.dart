@@ -10,7 +10,7 @@ import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/dataTaggingPopupView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
-//import 'package:vibe/viewmodel/listenStreamViewModel.dart';
+import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -22,13 +22,12 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   IconData icon = Icons.square_rounded;
   Color iconColor = Colors.black;
-  //list of UInt8List - List of list<int> - List of int <- this is needed
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      //initSoundStream();
+      initSoundStream();
     });
   }
 

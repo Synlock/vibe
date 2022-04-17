@@ -5,14 +5,20 @@ class Mongo {
   static var db;
   static var dataTaggingCollection;
 
-  static openConnection() async {
-    db = await Db.create(MONGO_CONNECTION_URL);
-    await db.open();
+  static Future<bool> openConnection() async {
+    try {
+      db = await Db.create(MONGO_CONNECTION_URL);
+      await db.open();
 
-    dataTaggingCollection = db.collection(DATA_TAGGING_COLLECTION);
+      dataTaggingCollection = db.collection(DATA_TAGGING_COLLECTION);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
-  static closeConnection() async {
+  static Future<void> closeConnection() async {
     await db.close();
   }
 

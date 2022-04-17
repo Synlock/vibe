@@ -103,6 +103,23 @@ class AlertPopup extends StatefulWidget {
 class _AlertPopupState extends State<AlertPopup> {
   AudioPlayer audioPlayer = AudioPlayer();
   Color bgColor = Colors.red;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.alert.alertBehavior.isSilent) return;
+
+    alertBehaviorHandler(
+      widget.alert.alertBehavior,
+      audioPlayer,
+      1,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    audioPlayer.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

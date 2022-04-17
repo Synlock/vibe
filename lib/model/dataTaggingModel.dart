@@ -4,7 +4,7 @@ enum dataTagging { match, noMatch, notSure, noAnswer }
 
 class AlertTaggingData {
   int userId;
-  List<int> audioClip;
+  List<List<int>> audioClip;
   String clipLabel;
   int response;
   DateTime timeStamp;
@@ -27,7 +27,7 @@ class AlertTaggingData {
 
   AlertTaggingData.fromJson(Map<String, dynamic> json)
       : userId = json[USER_ID] as int,
-        audioClip = json[AUDIO_CLIP] as List<int>,
+        audioClip = json[AUDIO_CLIP] as List<List<int>>,
         clipLabel = json[CLIP_LABEL] as String,
         response = json[RESPONSE_INDEX] as int,
         timeStamp = json[TIME_STAMP] as DateTime;

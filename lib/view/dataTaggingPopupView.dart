@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:vibe/DB/mongo.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/dataTaggingModel.dart';
 import 'package:vibe/styles/buttons.dart';
 
@@ -18,9 +21,25 @@ class DataTaggingPopup extends StatefulWidget {
 
 class _DataTaggingPopupState extends State<DataTaggingPopup> {
   @override
+  void initState() {
+    super.initState();
+
+    Timer(const Duration(minutes: 10), () {
+      Mongo.addOneToCollection(AlertTaggingData(
+        userId: 0,
+        audioClip: <List<int>>[],
+        clipLabel: widget.alertName,
+        response: dataTagging.noAnswer.index,
+        timeStamp: DateTime.now(),
+      ).toJson());
+      Navigator.pop(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Was this detection correct?"),
+      title: const Text(CORRECT_DETECTION),
       actionsPadding: const EdgeInsets.only(bottom: 20.0),
       actions: <Widget>[
         Center(
@@ -76,7 +95,7 @@ class _DataTaggingPopupState extends State<DataTaggingPopup> {
   Map<String, dynamic> convertToJson() {
     var i = AlertTaggingData(
       userId: 0,
-      audioClip: <int>[],
+      audioClip: <List<int>>[],
       clipLabel: "",
       response: dataTagging.notSure.index,
       timeStamp: DateTime.now(),

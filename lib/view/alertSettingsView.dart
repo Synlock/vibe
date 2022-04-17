@@ -234,9 +234,19 @@ class _AlertSettingsState extends State<AlertSettings> {
                   ),
                   alertButton(
                     () async {
-                      // await _player.setAudioSource(
-                      //     AudioSource.uri(Uri.parse(widget.alertPath)));
-                      // await _player.play();
+                      await _player.setAudioSource(
+                          AudioSource.uri(Uri.parse(widget.alertPath)));
+                      await _player.play();
+                    },
+                    PLAY,
+                    "",
+                    alertButtonTextStyle()!,
+                    subAlertButtonTextStyle()!,
+                    alertButtonStyle()!,
+                  ),
+                  divider(),
+                  alertButton(
+                    () async {
                       widget.alertBehavior.isFullPage
                           ? Navigator.push(
                               context,
@@ -255,38 +265,13 @@ class _AlertSettingsState extends State<AlertSettings> {
                             )
                           : showAlertBox();
                     },
-                    PLAY,
+                    "Show alert banner",
                     "",
                     alertButtonTextStyle()!,
                     subAlertButtonTextStyle()!,
                     alertButtonStyle()!,
                   ),
                   divider(),
-                  // alertButton(
-                  //   () {},
-                  //   TYPE_OF_ALERT_UI,
-                  //   widget.typeOfAlert,
-                  //   alertButtonTextStyle()!,
-                  //   subAlertButtonTextStyle()!,
-                  //   alertButtonStyle()!,
-                  // ),
-                  // AlertTypeDropdown(
-                  //     onSelect: (String newOption) async {
-                  //       widget.alertBehavior = newOption;
-                  //       File jsonFile =
-                  //           await getJsonFile(ALERTS_JSON_FILE_NAME);
-                  //       final json =
-                  //           await getDecodedJson(ALERTS_JSON_FILE_NAME);
-                  //       final item = json[widget.alertId];
-                  //       item[TYPE_OF_ALERT] = widget.alertBehavior;
-
-                  //       await encodeJson(jsonFile, json, FileMode.write);
-
-                  //       setState(() {
-                  //         widget.alertBehavior = newOption;
-                  //       });
-                  //     },
-                  //     alertType: widget.alertBehavior),
                   toggleButton(
                     IS_FULL_PAGE_UI,
                     "",

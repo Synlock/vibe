@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vibe/DB/mongo.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
@@ -23,18 +24,29 @@ class InitApplication extends StatefulWidget {
 }
 
 class _InitApplicationState extends State<InitApplication> {
+  bool connectedDB = false;
+  bool approvedPermissions = false;
+  bool approved = false;
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       widget.animationController.stop();
-      bool approved = await getPermissions();
+      widget.animationController.forward();
+      approvedPermissions = await getPermissions();
+      try {
+        connectedDB = await Mongo.openConnection();
+      } catch (e) {
+        print(e);
+      } finally {
+        connectedDB = true;
+      }
 
       await setRecordingsDirectory();
       await initCategoryList();
 
-      if (approved) {
-        widget.animationController.forward();
+      if (approvedPermissions && connectedDB) {
+        approved = true;
       }
 
       Directory recordingsDir = Directory(getPathToRecordings());
@@ -46,11 +58,15 @@ class _InitApplicationState extends State<InitApplication> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.animationController.isCompleted
-        ? CircularProgressIndicator.adaptive(
-            backgroundColor: yellowColor,
-          )
-        : Container();
+    return StreamBuilder(builder: (context, snapshot) {
+      if (!approved) {
+        return CircularProgressIndicator.adaptive(
+          backgroundColor: yellowColor,
+        );
+      } else {
+        return Container();
+      }
+    });
   }
 }
 
