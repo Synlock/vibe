@@ -14,7 +14,6 @@ List<List<List<int>>> cachedSamples = [];
 
 void initSoundStream() async {
   await stream.initPlugin();
-  await stream.recorder.start();
 
   stream1RecorderController();
 }

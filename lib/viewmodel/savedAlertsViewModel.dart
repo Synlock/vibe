@@ -19,32 +19,37 @@ List<AlertBehavior>? getAlertBehaviors() => alertBehaviors;
 
 int alertIndex = 0;
 Future<bool> populateAlertsList(String? path) async {
-  final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-  Directory directory = Directory(getPathToRecordings());
+  try {
+    final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
 
-  FileSystemEntity fileInDirectory = File("");
-  for (var i = alertIndex; i < directory.listSync().length; i++) {
-    fileInDirectory = directory.listSync()[i];
-    if (fileInDirectory.path == path) break;
+    Directory directory = Directory(getPathToRecordings());
 
-    final item = json[i];
-    final alertBehavior = item[ALERT_BEHAVIOR];
-    getAlerts()!.add(AlertData(
-      alertId: item[ALERT_ID],
-      alertName: item[ALERT_NAME],
-      alertCategory: item[ALERT_CATEGORY],
-      alertIcon: item[ALERT_ICON],
-      alertDuration: 0, //item[ALERT_DURATION],
-      alertPath: item[ALERT_PATH],
-      alertBehavior: AlertBehavior(
-        isFullPage: alertBehavior[IS_FULL_PAGE],
-        isSound: alertBehavior[IS_SOUND],
-        isVibrate: alertBehavior[IS_VIBRATE],
-        isFlash: alertBehavior[IS_FLASH],
-        isSilent: alertBehavior[IS_SILENT],
-      ),
-    ));
-    alertIndex++;
+    FileSystemEntity fileInDirectory = File("");
+    for (var i = alertIndex; i < directory.listSync().length; i++) {
+      fileInDirectory = directory.listSync()[i];
+      if (fileInDirectory.path == path) break;
+
+      final item = json[i];
+      final alertBehavior = item[ALERT_BEHAVIOR];
+      getAlerts()!.add(AlertData(
+        alertId: item[ALERT_ID],
+        alertName: item[ALERT_NAME],
+        alertCategory: item[ALERT_CATEGORY],
+        alertIcon: item[ALERT_ICON],
+        alertDuration: 0, //item[ALERT_DURATION],
+        alertPath: item[ALERT_PATH],
+        alertBehavior: AlertBehavior(
+          isFullPage: alertBehavior[IS_FULL_PAGE],
+          isSound: alertBehavior[IS_SOUND],
+          isVibrate: alertBehavior[IS_VIBRATE],
+          isFlash: alertBehavior[IS_FLASH],
+          isSilent: alertBehavior[IS_SILENT],
+        ),
+      ));
+      alertIndex++;
+    }
+  } catch (e) {
+    print(e);
   }
   return true;
 }
@@ -75,6 +80,7 @@ Future<void> setAlertData(
       recordingsDirectory,
       alertToChange.alertName);
 
+  //TODO: fix from firstWhere directly to path
   alertToChange.alertPath = recordingsDirectory
       .listSync()
       .firstWhere((element) => element.path.contains(alertToChange.alertName))

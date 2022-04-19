@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -10,7 +13,7 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
-import 'package:vibe/viewmodel/micStreamViewModel.dart';
+import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -22,9 +25,14 @@ class AddNewAlert extends StatefulWidget {
 }
 
 class _AddNewAlertState extends State<AddNewAlert> {
-  final stopWatchTimer = StopWatchTimer(mode: StopWatchMode.countUp);
-  final record = Record();
-  final audioPlayer = AudioPlayer();
+  final StopWatchTimer stopWatchTimer = StopWatchTimer();
+  final Record record = Record();
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() async {
@@ -43,6 +51,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
 
         if (value >= getMaxRecordTimeInSecs() * 1000) {
           stopRecord(context, stopWatchTimer, record);
+          executeStopWatch(stopWatchTimer, StopWatchExecute.reset);
         }
 
         final displayTime = StopWatchTimer.getDisplayTime(value, hours: false);
@@ -92,6 +101,11 @@ class _AddNewAlertState extends State<AddNewAlert> {
         }
       });
     }
+
+    //if user settings not set to off start listening to mic after finish recording
+    //if(!isSilent)
+    //await stream.recorder.start();
+
     if (!getIsRecording()) return;
 
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -105,6 +119,9 @@ class _AddNewAlertState extends State<AddNewAlert> {
 
   int getDirectoryLength() {
     Directory recordingDir = Directory(getPathToRecordings());
+    if (!recordingDir.existsSync()) {
+      return 0;
+    }
     int length = recordingDir.listSync().length;
     return length;
   }
@@ -114,24 +131,31 @@ class _AddNewAlertState extends State<AddNewAlert> {
     return Scaffold(
       appBar: mainAppBar(context, ADD_NEW_ALERT),
       backgroundColor: indigoColor,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              height: 130,
-            ),
-            const MyMicStream(),
-            getDirectoryLength() >= MAX_ALERTS
-                ? const Text(
-                    "Too many alerts, please delete some, max = $MAX_ALERTS")
-                : RecorderWidget(
-                    stopWatchTimer: stopWatchTimer,
-                    record: record,
-                    displayStopwatch: displayStopWatch,
-                    stopRecord: stopRecord,
-                  ),
-          ],
+      resizeToAvoidBottomInset: false,
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 100.0),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              //getIsRecording()?
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30.0),
+                child: RecorderWaveform(record: record),
+              ),
+              // : const InstructRecord(),
+              getDirectoryLength() >= MAX_ALERTS
+                  ? const Text(
+                      "Too many alerts, please delete some, max = $MAX_ALERTS")
+                  : RecorderWidget(
+                      stopWatchTimer: stopWatchTimer,
+                      record: record,
+                      displayStopwatch: displayStopWatch,
+                      stopRecord: stopRecord,
+                    ),
+            ],
+          ),
         ),
       ),
     );
@@ -162,9 +186,6 @@ class _RecorderWidgetState extends State<RecorderWidget> {
     return Column(
       children: [
         widget.displayStopwatch(widget.stopWatchTimer, widget.record),
-        Container(
-          height: 20,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -201,8 +222,9 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                   hoverColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   splashColor: Colors.transparent,
-                  onPressed: () {
+                  onPressed: () async {
                     setIsRecording(!getIsRecording());
+                    await stream.recorder.stop();
                     setState(() {
                       if (getIsRecording()) {
                         startRecord(widget.stopWatchTimer, widget.record);
@@ -230,27 +252,106 @@ class _RecorderWidgetState extends State<RecorderWidget> {
   }
 }
 
+class RecorderWaveform extends StatefulWidget {
+  final Record record;
+
+  const RecorderWaveform({
+    Key? key,
+    required this.record,
+  }) : super(key: key);
+
+  @override
+  State<RecorderWaveform> createState() => _RecorderWaveformState();
+}
+
+class _RecorderWaveformState extends State<RecorderWaveform> {
+  Amplitude amp = Amplitude(current: 0, max: 0);
+  Timer ampTimer = Timer(Duration.zero, () {});
+  double waveHeight = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ampTimer =
+        Timer.periodic(const Duration(milliseconds: 200), (Timer t) async {
+      if (!await widget.record.isRecording()) return;
+      amp = await widget.record.getAmplitude();
+
+      setState(() {
+        waveHeight = amp.current == double.negativeInfinity
+            ? 0
+            : lerpDouble(250, 0, amp.current.abs() / 60)!;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ampTimer.cancel();
+  }
+
+  double getRandomMultiplier() {
+    Random random = Random();
+
+    double num = random.nextDouble() + 1.0;
+
+    if (num == 0) num = 1;
+
+    return num;
+  }
+
+  AnimatedContainer waveBar(double multiplier) => AnimatedContainer(
+        duration: const Duration(milliseconds: 50),
+        width: 35,
+        height: waveHeight * multiplier,
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        waveBar(getRandomMultiplier()),
+        waveBar(getRandomMultiplier()),
+        waveBar(getRandomMultiplier()),
+        waveBar(1),
+        waveBar(getRandomMultiplier()),
+        waveBar(getRandomMultiplier()),
+        waveBar(getRandomMultiplier()),
+        waveBar(getRandomMultiplier()),
+      ],
+    );
+  }
+}
+
 class InstructRecord extends StatelessWidget {
   const InstructRecord({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        const Text(
+      children: const [
+        Text(
           ADD_NEW_ALERT_INSTRUCTION_TEXT,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
           ),
+          textAlign: TextAlign.end,
         ),
-        const Icon(
+        Icon(
           Icons.touch_app,
           color: Colors.white,
           size: 70,
-        ),
-        Container(
-          height: 100,
         ),
       ],
     );

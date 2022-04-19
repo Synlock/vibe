@@ -302,8 +302,9 @@ class SoundStreamController {
 
     audioStream = recorder.audioStream.listen((data) {
       micChunks.add(data);
+      print(micChunks);
       //14 ticks per second
-      if (micChunks.length >= 440) {
+      if (micChunks.length >= 224) {
         micChunks.removeAt(0);
       }
       if (micChunks.length >= 60) {
@@ -314,9 +315,6 @@ class SoundStreamController {
             )
             .toList();
       }
-    });
-    Timer.periodic(const Duration(seconds: 4), (timer) {
-      if (!isRecording) timer.cancel();
     });
 
     await Future.wait([

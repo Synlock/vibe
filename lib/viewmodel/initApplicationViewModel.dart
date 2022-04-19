@@ -58,29 +58,26 @@ class _InitApplicationState extends State<InitApplication> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(builder: (context, snapshot) {
-      if (!approved) {
-        return CircularProgressIndicator.adaptive(
-          backgroundColor: yellowColor,
-        );
-      } else {
-        return Container();
-      }
-    });
+    if (!approved) {
+      return CircularProgressIndicator.adaptive(
+        backgroundColor: yellowColor,
+      );
+    } else {
+      return Container();
+    }
   }
 }
 
 Future<bool> getPermissions() async {
   bool micPermission = await requestPermission(Permission.microphone);
-  if (micPermission) return true;
   if (Platform.isAndroid) {
     bool storagePermission = await requestPermission(Permission.storage);
-    if (storagePermission) return true;
+    if (storagePermission && micPermission) return true;
     return false;
   } else {
     bool mediaLibraryPermission =
         await requestPermission(Permission.mediaLibrary);
-    if (mediaLibraryPermission) return true;
+    if (mediaLibraryPermission && micPermission) return true;
     return false;
   }
 }
