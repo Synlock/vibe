@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:vibe/misc/commonCalls.dart';
+import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/model/soundListModel.dart';
 import 'package:vibe/view/alertBannerView.dart';
@@ -15,7 +17,9 @@ List<List<List<int>>> cachedSamples = [];
 void initSoundStream() async {
   await stream.initPlugin();
 
-  stream1RecorderController();
+  final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+
+  if (!json[IS_SILENT]) stream1RecorderController();
 }
 
 void stream1RecorderController() async {

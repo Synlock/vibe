@@ -7,6 +7,7 @@ import 'package:vibe/DB/mongo.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
+import 'package:vibe/model/userSettingsModel.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
@@ -44,6 +45,7 @@ class _InitApplicationState extends State<InitApplication> {
 
       await setRecordingsDirectory();
       await initCategoryList();
+      await initUserSettings();
 
       if (approvedPermissions && connectedDB) {
         approved = true;
@@ -131,12 +133,12 @@ Future<List<CategoryData>> initCategoryList() async {
       categoryIcon: getCategoryIcons[0].codePoint,
     ));
     getCategories()!.add(CategoryData(
-      categoryName: HOME_CATEGORY_UI,
-      categoryIcon: getCategoryIcons[1].codePoint,
-    ));
-    getCategories()!.add(CategoryData(
       categoryName: EMERGENCY_CATEGORY_UI,
       categoryIcon: getCategoryIcons[2].codePoint,
+    ));
+    getCategories()!.add(CategoryData(
+      categoryName: HOME_CATEGORY_UI,
+      categoryIcon: getCategoryIcons[1].codePoint,
     ));
 
     try {
@@ -165,4 +167,50 @@ Future<List<CategoryData>> initCategoryList() async {
     );
   }
   return getCategories()!;
+}
+
+Future<void> initUserSettings() async {
+  final File settingsJsonFile = await getJsonFile(SETTINGS_JSON_FILE_NAME);
+  String fileContents = await settingsJsonFile.readAsString();
+
+  UserSettings settings = UserSettings(
+      isSilent: false,
+      isSilentFrom: true,
+      timeToSilenceHour: 23,
+      timeToSilenceMinute: 00,
+      isDoNotDisturb: false,
+      isSync: false);
+
+  if (fileContents == "" || fileContents == "[]") {
+    try {
+      await encodeJson(
+        settingsJsonFile,
+        settings.toJson(),
+        FileMode.write,
+      );
+    } catch (e) {
+      print(e);
+    }
+  } else {
+    final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+
+    settings.isSilent = json[IS_SILENT];
+    settings.isSilentFrom = json[IS_SILENT_FROM];
+    settings.timeToSilenceHour = json[TIME_TO_SILENCE_HOUR];
+    settings.timeToSilenceMinute = json[TIME_TO_SILENCE_MINUTE];
+    settings.isDoNotDisturb = json[IS_DO_NOT_DISTURB];
+    settings.isSync = json[IS_SYNC];
+
+    try {
+      await encodeJson(
+        settingsJsonFile,
+        settings.toJson(),
+        FileMode.write,
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+  final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+  print(json);
 }

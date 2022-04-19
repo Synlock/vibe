@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/styles/appBar.dart';
@@ -103,8 +104,8 @@ class _AddNewAlertState extends State<AddNewAlert> {
     }
 
     //if user settings not set to off start listening to mic after finish recording
-    //if(!isSilent)
-    //await stream.recorder.start();
+    final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+    if (!json[IS_SILENT]) await stream.recorder.start();
 
     if (!getIsRecording()) return;
 
@@ -240,7 +241,7 @@ class _RecorderWidgetState extends State<RecorderWidget> {
             IconButton(
               icon: const Icon(Icons.insert_drive_file),
               onPressed: () {
-                Navigator.popAndPushNamed(context, "/savedAlerts");
+                Navigator.popAndPushNamed(context, SAVED_ALERTS_ROUTE);
               },
               iconSize: 50,
               color: Colors.white,
@@ -281,7 +282,7 @@ class _RecorderWaveformState extends State<RecorderWaveform> {
       setState(() {
         waveHeight = amp.current == double.negativeInfinity
             ? 0
-            : lerpDouble(250, 0, amp.current.abs() / 60)!;
+            : lerpDouble(200, 0, amp.current.abs() / 60)!;
       });
     });
   }
@@ -304,7 +305,7 @@ class _RecorderWaveformState extends State<RecorderWaveform> {
   }
 
   AnimatedContainer waveBar(double multiplier) => AnimatedContainer(
-        duration: const Duration(milliseconds: 50),
+        duration: const Duration(milliseconds: 10),
         width: 35,
         height: waveHeight * multiplier,
         decoration: BoxDecoration(

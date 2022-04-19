@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/misc/tags.dart';
@@ -15,40 +18,73 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   //TODO:// move functions to viewmodel
   bool isSilent = true;
-  bool isSilenceFrom = true;
+  bool isSilentFrom = true;
+  int hour = 0;
+  int min = 0;
   bool isDoNotDisturb = true;
   bool isSync = false;
   bool isSaveHistory = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      try {
+        final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+        setState(() {
+          isSilent = json[IS_SILENT];
+          isSilentFrom = json[IS_SILENT_FROM];
+          min = json[TIME_TO_SILENCE_MINUTE];
+          hour = json[TIME_TO_SILENCE_HOUR];
+          isSync = json[IS_SYNC];
+          isDoNotDisturb = json[IS_DO_NOT_DISTURB];
+        });
+      } catch (e) {
+        print(e);
+      }
+    });
+  }
+
+  Future<void> updateSettingsBools(String valueToUpdate, bool newValue) async {
+    final jsonFile = await getJsonFile(SETTINGS_JSON_FILE_NAME);
+    final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+    json[valueToUpdate] = newValue;
+
+    await encodeJson(jsonFile, json, FileMode.write);
+  }
+
   void setIsSilent(bool value) async {
     if (!isSilent) {
-      stream1RecorderController();
+      stopRecorders();
       setState(() {
         isSilent = true;
       });
     } else {
-      stopRecorders();
+      stream1RecorderController();
       setState(() {
         isSilent = false;
       });
     }
+    await updateSettingsBools(IS_SILENT, isSilent);
   }
 
-  void setIsSilenceFrom(bool value) {
-    if (!isSilenceFrom) {
+  void setIsSilenceFrom(bool value) async {
+    if (!isSilentFrom) {
       setState(() {
-        isSilenceFrom = true;
+        isSilentFrom = true;
         //insert silence alarm here
       });
     } else {
       setState(() {
-        isSilenceFrom = false;
+        isSilentFrom = false;
         //insert silence off alarm here
       });
     }
+    await updateSettingsBools(IS_SILENT_FROM, isSilentFrom);
   }
 
-  void setIsDoNotDisturb(bool value) {
+  void setIsDoNotDisturb(bool value) async {
     if (!isDoNotDisturb) {
       setState(() {
         isDoNotDisturb = true;
@@ -60,9 +96,10 @@ class _SettingsState extends State<Settings> {
         //insert silence off alarm here
       });
     }
+    await updateSettingsBools(IS_DO_NOT_DISTURB, isDoNotDisturb);
   }
 
-  void setIsSync(bool value) {
+  void setIsSync(bool value) async {
     if (!isSync) {
       setState(() {
         isSync = true;
@@ -74,21 +111,22 @@ class _SettingsState extends State<Settings> {
         //insert silence off alarm here
       });
     }
+    await updateSettingsBools(IS_SYNC, isSync);
   }
 
-  void setIsSaveHistory(bool value) {
-    if (!isSaveHistory) {
-      setState(() {
-        isSaveHistory = true;
-        //insert silence alarm here
-      });
-    } else {
-      setState(() {
-        isSaveHistory = false;
-        //insert silence off alarm here
-      });
-    }
-  }
+  // void setIsSaveHistory(bool value) async{
+  //   if (!isSaveHistory) {
+  //     setState(() {
+  //       isSaveHistory = true;
+  //       //insert silence alarm here
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isSaveHistory = false;
+  //       //insert silence off alarm here
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -155,8 +193,8 @@ class _SettingsState extends State<Settings> {
                   divider(),
                   toggleButton(
                     SILENCE_FROM_TIME,
-                    "23:00",
-                    isSilenceFrom,
+                    "$hour:$min",
+                    isSilentFrom,
                     setIsSilenceFrom,
                     alertButtonTextStyle()!,
                     subAlertButtonTextStyle()!,
@@ -182,16 +220,16 @@ class _SettingsState extends State<Settings> {
                     subAlertButtonTextStyle()!,
                     settingsButtonStyle()!,
                   ),
-                  divider(),
-                  toggleButton(
-                    SAVE_ALERT_HISTORY,
-                    "",
-                    isSaveHistory,
-                    setIsSaveHistory,
-                    alertButtonTextStyle()!,
-                    subAlertButtonTextStyle()!,
-                    settingsButtonStyle()!,
-                  ),
+                  // divider(),
+                  // toggleButton(
+                  //   SAVE_ALERT_HISTORY,
+                  //   "",
+                  //   isSaveHistory,
+                  //   setIsSaveHistory,
+                  //   alertButtonTextStyle()!,
+                  //   subAlertButtonTextStyle()!,
+                  //   settingsButtonStyle()!,
+                  // ),
                 ],
               ),
             ),

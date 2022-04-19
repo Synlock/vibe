@@ -42,6 +42,13 @@ const String IS_SOUND = "isSound";
 const String IS_VIBRATE = "isVibrate";
 const String IS_FLASH = "isFlash";
 
+//Settings Model
+const String IS_SILENT_FROM = "isSilentFrom";
+const String TIME_TO_SILENCE_HOUR = "timeToSilenceHour";
+const String TIME_TO_SILENCE_MINUTE = "timeToSilenceMinute";
+const String IS_DO_NOT_DISTURB = "isDoNotDisturb";
+const String IS_SYNC = "isSync";
+
 //Alert Page UI
 const String TYPE_OF_ALERT_UI = "Type of alert";
 const String IS_FULL_PAGE_UI = "Will be popup or fullscreen alert";
@@ -95,6 +102,7 @@ const String RECORDINGS_FOLDER_NAME = "Vibe Recordings";
 const String NEW_RECORDING_NAME = "New Alert";
 const String ALERTS_JSON_FILE_NAME = "alertsJson.json";
 const String CATEGORY_JSON_FILE_NAME = "categoriesJson.json";
+const String SETTINGS_JSON_FILE_NAME = "settingsJson.json";
 
 //Misc
 const String CATEGORY = "Category";

@@ -1,27 +1,36 @@
-// class UserSettings {
-//   String categoryName;
-//   int categoryIcon;
+import 'package:vibe/misc/tags.dart';
 
-//   @override
-//   bool operator ==(Object other) =>
-//       other is UserSettings &&
-//       (other.categoryName == categoryName ||
-//           other.categoryIcon == categoryIcon);
+class UserSettings {
+  bool isSilent;
+  bool isSilentFrom;
+  int timeToSilenceHour;
+  int timeToSilenceMinute;
+  bool isDoNotDisturb;
+  bool isSync;
 
-//   @override
-//   int get hashCode => categoryIcon.hashCode;
+  UserSettings({
+    required this.isSilent,
+    required this.isSilentFrom,
+    required this.timeToSilenceHour,
+    required this.timeToSilenceMinute,
+    required this.isDoNotDisturb,
+    required this.isSync,
+  });
 
-//   UserSettings({
-//     required this.categoryName,
-//     required this.categoryIcon,
-//   });
+  UserSettings.fromJson(Map<String, dynamic> json)
+      : isSilent = json[IS_SILENT] as bool,
+        isSilentFrom = json[IS_SILENT_FROM] as bool,
+        timeToSilenceHour = json[TIME_TO_SILENCE_HOUR] as int,
+        timeToSilenceMinute = json[TIME_TO_SILENCE_MINUTE] as int,
+        isDoNotDisturb = json[IS_DO_NOT_DISTURB] as bool,
+        isSync = json[IS_SYNC] as bool;
 
-//   UserSettings.fromJson(Map<String, dynamic> json)
-//       : categoryName = json[] as String,
-//         categoryIcon = json[] as int;
-
-//   Map<String, dynamic> toJson() => {
-//         : categoryName,
-//         : categoryIcon,
-//       };
-// }
+  Map<String, dynamic> toJson() => {
+        IS_SILENT: isSilent,
+        IS_SILENT_FROM: isSilentFrom,
+        TIME_TO_SILENCE_HOUR: timeToSilenceHour,
+        TIME_TO_SILENCE_MINUTE: timeToSilenceMinute,
+        IS_DO_NOT_DISTURB: isDoNotDisturb,
+        IS_SYNC: isSync,
+      };
+}
