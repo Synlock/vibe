@@ -39,8 +39,8 @@ class _AlertSettingsState extends State<AlertSettings> {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-      final item = json[widget.alertId];
+      //final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+      //final item = json[widget.alertId];
       setState(() {
         //widget.alertBehavior = item[TYPE_OF_ALERT][];
       });

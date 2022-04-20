@@ -109,6 +109,9 @@ Future<void> updateAlertData(
         newName);
 
     alertToChange.alertName = newName;
+
+    alertToChange.alertPath =
+        "${recordingsDirectory.path}/${alertToChange.alertName}.wav";
   }
 
   if (newCategory != getCategories()![0].categoryName) {
