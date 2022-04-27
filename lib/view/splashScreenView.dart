@@ -19,10 +19,11 @@ class _SplashScreenState extends State<SplashScreen>
     ..forward()
     ..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        setState(() {});
+        if (!Navigator.of(context).mounted) return;
         Future.delayed(const Duration(seconds: 2), () {
-          Navigator.popAndPushNamed(context, HOME_ROUTE);
+          Navigator.of(context).popAndPushNamed(HOME_ROUTE);
         });
+        setState(() {});
       }
     });
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
@@ -32,6 +33,18 @@ class _SplashScreenState extends State<SplashScreen>
     parent: _controller,
     curve: Curves.easeInOut,
   ));
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

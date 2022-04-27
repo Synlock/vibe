@@ -232,19 +232,19 @@ class _AlertSettingsState extends State<AlertSettings> {
                       ),
                     ],
                   ),
-                  alertButton(
-                    () async {
-                      await _player.setAudioSource(
-                          AudioSource.uri(Uri.parse(widget.alertPath)));
-                      await _player.play();
-                    },
-                    PLAY,
-                    "",
-                    alertButtonTextStyle()!,
-                    subAlertButtonTextStyle()!,
-                    alertButtonStyle()!,
-                  ),
-                  divider(),
+                  // alertButton(
+                  //   () async {
+                  //     await _player.setAudioSource(
+                  //         AudioSource.uri(Uri.parse(widget.alertPath)));
+                  //     await _player.play();
+                  //   },
+                  //   PLAY,
+                  //   "",
+                  //   alertButtonTextStyle()!,
+                  //   subAlertButtonTextStyle()!,
+                  //   alertButtonStyle()!,
+                  // ),
+                  // divider(),
                   alertButton(
                     () async {
                       widget.alertBehavior.isFullPage

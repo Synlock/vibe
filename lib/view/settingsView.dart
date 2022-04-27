@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/styles.dart';
@@ -24,6 +25,8 @@ class _SettingsState extends State<Settings> {
   bool isDoNotDisturb = true;
   bool isSync = false;
   bool isSaveHistory = false;
+
+  final service = FlutterBackgroundService();
 
   @override
   void initState() {
@@ -55,13 +58,20 @@ class _SettingsState extends State<Settings> {
   }
 
   void setIsSilent(bool value) async {
+    bool isBgServiceRunning = await service.isRunning();
     if (!isSilent) {
       stopRecorders();
+      if (isBgServiceRunning) {
+        service.invoke("stopService");
+      }
       setState(() {
         isSilent = true;
       });
     } else {
-      stream1RecorderController();
+      streamRecorderController();
+      if (!isBgServiceRunning) {
+        await service.startService();
+      }
       setState(() {
         isSilent = false;
       });

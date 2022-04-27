@@ -56,7 +56,8 @@ Future<Directory?> getPlatformDirectory() async {
 
 Future<File> getJsonFile(String fileName) async {
   Directory? mainDir = await getPlatformDirectory();
-  File jsonFile = File(mainDir!.path + "/" + fileName);
+
+  File jsonFile = File("${mainDir!.path}/$fileName");
 
   //TODO: need to call this on application start
   if (!await jsonFile.exists()) {

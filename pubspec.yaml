@@ -42,11 +42,12 @@ dependencies:
   just_audio: ^0.9.20
   path: ^1.8.0
   move_to_background: ^1.0.2
-  mic_stream: ^0.6.0
   vibration: ^1.7.3
   torch_light: ^0.4.0
   sound_stream: ^0.3.0
   mongo_dart: ^0.7.4+1
+  flutter_background_service: ^2.0.0
+  awesome_notifications: any
 
 dev_dependencies:
   flutter_test:

@@ -21,11 +21,7 @@ class _AlertBannerState extends State<AlertBanner> {
     super.initState();
     if (widget.alert.alertBehavior.isSilent) return;
 
-    alertBehaviorHandler(
-      widget.alert.alertBehavior,
-      audioPlayer,
-      1,
-    );
+    alertBehaviorHandler(widget.alert.alertBehavior, audioPlayer, 1, false);
   }
 
   @override
@@ -108,11 +104,7 @@ class _AlertPopupState extends State<AlertPopup> {
     super.initState();
     if (widget.alert.alertBehavior.isSilent) return;
 
-    alertBehaviorHandler(
-      widget.alert.alertBehavior,
-      audioPlayer,
-      1,
-    );
+    alertBehaviorHandler(widget.alert.alertBehavior, audioPlayer, 1, false);
   }
 
   @override

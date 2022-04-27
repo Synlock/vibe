@@ -11,6 +11,7 @@ const String SETTINGS = "Settings";
 const String ALERT = "Alert Settings";
 
 //Named Routes
+const String SPLASH_ROUTE = "/splash";
 const String HOME_ROUTE = "/home";
 const String NEW_ALERT_ROUTE = "/newAlert";
 const String SAVED_ALERTS_ROUTE = "/savedAlerts";
@@ -130,14 +131,14 @@ const int MAX_ALERTS = 20;
 const int MAX_CATEGORIES = 20;
 
 //Predefined Sounds Strings
-const String RED_ALERT = "אזעקת צבע אדום";
-const String SHOOTING = "ירי";
-const String SIREN = "סירנה";
-const String DOORBELL = "פעמון דלת";
-const String LOUD_SOUND = "סאונד חזק";
-const String MICROWAVE = "מיקרו";
-const String WASHING_MACHINE = "מכונת כביסה";
-const String DOOR_KNOCK = "דפיקה בדלת";
+const String RED_ALERT = "אזעקת צבע אדום"; //default on start with no delete
+const String SHOOTING = "ירי"; //default on start with no delete
+const String SIREN = "סירנה"; //default on start with no delete
+const String DOORBELL = "פעמון דלת"; //default on start with no delete
+const String LOUD_SOUND = "סאונד חזק"; //default on start with no delete
+const String MICROWAVE = "מיקרו"; //default on start with no delete
+const String WASHING_MACHINE = "מכונת כביסה"; //default on start with no delete
+const String DOOR_KNOCK = "דפיקה בדלת"; //default on start with no delete
 const String GLASS_BREAKING = "זכוכית נשברת";
 const String ITEM_FALL = "משהו נפל";
 const String DOOR_SLAMMING = "דלת נטרקת";
@@ -148,3 +149,10 @@ const String WATER_RUNNING = "מים זורמים";
 const String CRYING = "בכי";
 const String SHOUTING = "צעקות";
 const String CALL_BY_NAME = "קריאה בשם";
+
+//Push Notifications
+const String CANCEL_ALERT_CHANNEL_KEY = "cancel_channel";
+const String CANCEL_ALERT_CHANNEL_NAME = "Cancel alert notifications";
+
+const String DETECT_ALERT_CHANNEL_KEY = "detect_channel";
+const String DETECT_ALERT_CHANNEL_NAME = "Detect alert notifications";

@@ -72,9 +72,16 @@ class _InitApplicationState extends State<InitApplication> {
 
 Future<bool> getPermissions() async {
   bool micPermission = await requestPermission(Permission.microphone);
+  bool notificationPermission =
+      await requestPermission(Permission.notification);
+  //await AwesomeNotifications().requestPermissionToSendNotifications();
   if (Platform.isAndroid) {
     bool storagePermission = await requestPermission(Permission.storage);
-    if (storagePermission && micPermission) return true;
+    //bool overlayPermission = await requestPermission(Permission.systemAlertWindow);
+
+    if (storagePermission && micPermission && notificationPermission) {
+      return true;
+    }
     return false;
   } else {
     bool mediaLibraryPermission =

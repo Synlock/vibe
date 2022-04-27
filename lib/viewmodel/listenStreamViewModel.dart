@@ -1,12 +1,53 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:sound_stream/sound_stream.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
 import 'package:vibe/model/soundListModel.dart';
 import 'package:vibe/view/alertBannerView.dart';
-import 'package:vibe/viewmodel/micStreamViewModel.dart';
+import 'package:vibe/view/dataTaggingPopupView.dart';
+
+class SoundStreamController {
+  final RecorderStream recorder = RecorderStream();
+
+  List<Uint8List> micChunks = [];
+  List<Uint8List> fourSecChunks = [];
+  bool isRecording = false;
+
+  StreamSubscription? recorderStatus;
+  StreamSubscription? audioStream;
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlugin() async {
+    recorderStatus = recorder.status.listen((status) {
+      isRecording = status == SoundStreamStatus.Playing;
+    });
+
+    audioStream = recorder.audioStream.listen((data) {
+      micChunks.add(data);
+      print(micChunks);
+      //14 ticks per second
+      if (micChunks.length >= 224) {
+        micChunks.removeAt(0);
+      }
+      if (micChunks.length >= 60) {
+        fourSecChunks = micChunks
+            .getRange(
+              micChunks.indexOf(micChunks.last) - 56,
+              micChunks.indexOf(micChunks.last),
+            )
+            .toList();
+      }
+    });
+
+    await Future.wait([
+      recorder.initialize(),
+    ]);
+  }
+}
 
 SoundStreamController stream = SoundStreamController();
 
@@ -18,16 +59,24 @@ void initSoundStream() async {
   await stream.initPlugin();
 
   final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+  if (json[IS_SILENT]) return;
 
-  if (!json[IS_SILENT]) stream1RecorderController();
+  streamRecorderController();
 }
 
-void stream1RecorderController() async {
+void streamRecorderController() async {
   await stream.recorder.start();
   timer = Timer.periodic(
     const Duration(milliseconds: 500),
     (timer) {
       if (!stream.isRecording) timer.cancel();
+      //24 * 500 ms equals 12 seconds
+      if (cachedSamples.length >= 24) {
+        cachedSamples.removeAt(0);
+        cachedSamples.add(stream.fourSecChunks);
+        return;
+      }
+
       cachedSamples.add(stream.fourSecChunks);
     },
   );
@@ -87,4 +136,17 @@ void showAlertBox(BuildContext context, AlertData alertData) async {
           ),
         );
       });
+}
+
+void showDataTaggingBox(BuildContext context) async {
+  var navigationResult = await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      return const DataTaggingPopup(
+        alertIcon: Icons.access_alarm,
+        alertName: "Alarm",
+      );
+    },
+  );
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:move_to_background/move_to_background.dart';
 import 'package:vibe/styles/buttons.dart';
@@ -7,10 +8,10 @@ import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/addNewAlertView.dart';
-import 'package:vibe/view/dataTaggingPopupView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
 import 'package:vibe/viewmodel/listenStreamViewModel.dart';
+import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -19,16 +20,41 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   IconData icon = Icons.square_rounded;
   Color iconColor = Colors.black;
-
   @override
   void initState() {
     super.initState();
+
+    initNotificationActions(context);
+
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       initSoundStream();
     });
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    AwesomeNotifications().dispose();
+    WidgetsBinding.instance!.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    final bool isBackground = state == AppLifecycleState.paused;
+
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) return;
+
+    if (isBackground) {
+      //add code here for when back pressed from homepage or home button pressed
+      //FlutterBackgroundService().invoke("setAsBackground");
+      return;
+    }
   }
 
   @override
@@ -65,29 +91,31 @@ class _HomepageState extends State<Homepage> {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            showDataTaggingBox(context);
-          },
-          child: Icon(
-            icon,
-            color: iconColor,
-          ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (builder) => const AndroidOverlayWindow()));
+                  //createCancelAlertNotification("Alert Name");
+                },
+                child: const Text("Cancel"),
+              ),
+            ),
+            // FloatingActionButton(
+            //   onPressed: () async {
+            //     createDetectNotification("Alert Name");
+            //   },
+            //   child: const Text("Detect"),
+            // ),
+          ],
         ),
       ),
     );
   }
-}
-
-void showDataTaggingBox(BuildContext context) async {
-  var navigationResult = await showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (context) {
-      return const DataTaggingPopup(
-        alertIcon: Icons.access_alarm,
-        alertName: "Alarm",
-      );
-    },
-  );
 }

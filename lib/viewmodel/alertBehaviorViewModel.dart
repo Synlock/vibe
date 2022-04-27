@@ -3,31 +3,43 @@ import 'dart:async';
 import 'package:just_audio/just_audio.dart';
 import 'package:torch_light/torch_light.dart';
 import 'package:vibe/model/savedAlertsModel.dart';
+import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 import 'package:vibration/vibration.dart';
 
 Timer soundTimer = Timer.periodic(Duration.zero, (timer) {});
 Timer vibrateTimer = Timer.periodic(Duration.zero, (timer) {});
 Timer flashTimer = Timer.periodic(Duration.zero, (timer) {});
+
 Future<void> alertBehaviorHandler(
   AlertBehavior alertBehavior,
-  AudioPlayer audioPlayer,
-  int howOften,
+  AudioPlayer? audioPlayer,
+  int pauseBetweenInSecs,
+  bool isActive,
 ) async {
   if (alertBehavior.isSound) {
-    soundTimer = Timer.periodic(Duration(seconds: howOften), (timer) {
-      playSoundUntilCancelled(audioPlayer);
+    soundTimer = Timer.periodic(Duration(seconds: pauseBetweenInSecs), (timer) {
+      if (!isActive) timer.cancel();
+
+      playSoundUntilCancelled(audioPlayer!);
     });
   }
   if (alertBehavior.isVibrate) {
-    vibrateTimer = Timer.periodic(Duration(seconds: howOften), (timer) {
+    vibrateTimer =
+        Timer.periodic(Duration(seconds: pauseBetweenInSecs), (timer) {
+      if (!isActive) timer.cancel();
+      print("vibrate");
       vibrateUntilCanceled();
     });
   }
   if (alertBehavior.isFlash) {
-    flashTimer = Timer.periodic(Duration(seconds: howOften), (timer) {
+    flashTimer = Timer.periodic(Duration(seconds: pauseBetweenInSecs), (timer) {
+      if (!isActive) timer.cancel();
+      print("flash");
+
       flashUntilCancelled();
     });
   }
+  createCancelAlertNotification("Alert Name");
 }
 
 void turnOffAllTimers() {
