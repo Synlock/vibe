@@ -49,6 +49,9 @@ dependencies:
   flutter_background_service: ^2.0.0
   awesome_notifications: any
 
+dependency_overrides:
+  path_provider_android: 2.0.11
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

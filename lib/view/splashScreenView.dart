@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/initApplicationViewModel.dart';
 
@@ -18,13 +17,9 @@ class _SplashScreenState extends State<SplashScreen>
   )
     ..forward()
     ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        if (!Navigator.of(context).mounted) return;
-        Future.delayed(const Duration(seconds: 2), () {
-          Navigator.of(context).popAndPushNamed(HOME_ROUTE);
-        });
-        setState(() {});
-      }
+      // if (status == AnimationStatus.completed) {
+      //add code here if want to execute something after animation
+      // }
     });
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: Offset.zero,

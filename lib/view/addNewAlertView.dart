@@ -14,6 +14,7 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
+import 'package:vibe/viewmodel/initApplicationViewModel.dart';
 import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
@@ -33,6 +34,10 @@ class _AddNewAlertState extends State<AddNewAlert> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await getPermissions();
+    });
   }
 
   @override
@@ -105,7 +110,7 @@ class _AddNewAlertState extends State<AddNewAlert> {
 
     //if user settings not set to off start listening to mic after finish recording
     final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
-    if (!json[IS_SILENT]) await stream.recorder.start();
+    if (!json[IS_SILENT]) await soundStreamer.stream.recorder.start();
 
     if (!getIsRecording()) return;
 
@@ -225,7 +230,7 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                   splashColor: Colors.transparent,
                   onPressed: () async {
                     setIsRecording(!getIsRecording());
-                    await stream.recorder.stop();
+                    await soundStreamer.stream.recorder.stop();
                     setState(() {
                       if (getIsRecording()) {
                         startRecord(widget.stopWatchTimer, widget.record);

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _InitApplicationState extends State<InitApplication> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       widget.animationController.stop();
-      widget.animationController.forward();
+
       approvedPermissions = await getPermissions();
       try {
         connectedDB = await Mongo.openConnection();
@@ -43,13 +44,21 @@ class _InitApplicationState extends State<InitApplication> {
         connectedDB = true;
       }
 
-      await setRecordingsDirectory();
-      await initCategoryList();
-      await initUserSettings();
+      if (approvedPermissions) {
+        await setRecordingsDirectory();
+        await initCategoryList();
+        await initUserSettings();
+      }
 
       if (approvedPermissions && connectedDB) {
         approved = true;
       }
+      //if (approved) {
+      widget.animationController.forward();
+      Timer(const Duration(seconds: 2), () {
+        Navigator.of(context).popAndPushNamed(HOME_ROUTE);
+      });
+      //}
 
       Directory recordingsDir = Directory(getPathToRecordings());
       if (recordingsDir.listSync().isEmpty) return;
@@ -78,17 +87,17 @@ Future<bool> getPermissions() async {
   if (Platform.isAndroid) {
     bool storagePermission = await requestPermission(Permission.storage);
     //bool overlayPermission = await requestPermission(Permission.systemAlertWindow);
-
     if (storagePermission && micPermission && notificationPermission) {
       return true;
     }
-    return false;
   } else {
     bool mediaLibraryPermission =
         await requestPermission(Permission.mediaLibrary);
-    if (mediaLibraryPermission && micPermission) return true;
-    return false;
+    if (mediaLibraryPermission && micPermission && notificationPermission) {
+      return true;
+    }
   }
+  return false;
 }
 
 Future<bool> setRecordingsDirectory() async {
@@ -221,3 +230,5 @@ Future<void> initUserSettings() async {
   final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
   print(json);
 }
+
+void permissionRecursion() {}

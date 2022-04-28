@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:move_to_background/move_to_background.dart';
+import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/styles.dart';
@@ -10,7 +12,6 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
-import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 
 class Homepage extends StatefulWidget {
@@ -30,7 +31,14 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
     initNotificationActions(context);
 
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
-      initSoundStream();
+      final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+      if (json[IS_SILENT]) {
+        if (await FlutterBackgroundService().isRunning()) {
+          FlutterBackgroundService().invoke("stopService");
+        }
+        return;
+      }
+      FlutterBackgroundService().invoke("initSoundStreamer");
     });
     WidgetsBinding.instance!.addObserver(this);
   }
@@ -52,7 +60,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     if (isBackground) {
       //add code here for when back pressed from homepage or home button pressed
-      //FlutterBackgroundService().invoke("setAsBackground");
+      //soundStreamer.stopRecorder();
+      //FlutterBackgroundService().invoke("initSoundStreamer");
       return;
     }
   }
@@ -91,30 +100,15 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             ),
           ],
         ),
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (builder) => const AndroidOverlayWindow()));
-                  //createCancelAlertNotification("Alert Name");
-                },
-                child: const Text("Cancel"),
-              ),
-            ),
-            // FloatingActionButton(
-            //   onPressed: () async {
-            //     createDetectNotification("Alert Name");
-            //   },
-            //   child: const Text("Detect"),
-            // ),
-          ],
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //             builder: (builder) => const Homepage()));
+        //   },
+        //   child: const Text("Cancel"),
+        // ),
       ),
     );
   }

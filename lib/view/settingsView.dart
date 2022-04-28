@@ -7,6 +7,7 @@ import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
+import 'package:vibe/viewmodel/initApplicationViewModel.dart';
 import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 
 class Settings extends StatefulWidget {
@@ -18,11 +19,11 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   //TODO:// move functions to viewmodel
-  bool isSilent = true;
-  bool isSilentFrom = true;
+  bool isSilent = false;
+  bool isSilentFrom = false;
   int hour = 0;
   int min = 0;
-  bool isDoNotDisturb = true;
+  bool isDoNotDisturb = false;
   bool isSync = false;
   bool isSaveHistory = false;
 
@@ -33,6 +34,9 @@ class _SettingsState extends State<Settings> {
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
+      bool havePermissions = await getPermissions();
+      if (!havePermissions) return;
+
       try {
         final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
         setState(() {
@@ -60,7 +64,7 @@ class _SettingsState extends State<Settings> {
   void setIsSilent(bool value) async {
     bool isBgServiceRunning = await service.isRunning();
     if (!isSilent) {
-      stopRecorders();
+      soundStreamer.stopRecorder();
       if (isBgServiceRunning) {
         service.invoke("stopService");
       }
@@ -68,7 +72,7 @@ class _SettingsState extends State<Settings> {
         isSilent = true;
       });
     } else {
-      streamRecorderController();
+      soundStreamer.streamRecorderController();
       if (!isBgServiceRunning) {
         await service.startService();
       }

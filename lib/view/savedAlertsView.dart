@@ -85,7 +85,7 @@ class _SavedAlertsState extends State<SavedAlerts>
               ?
               //if on "All" Tab move to add new alert
               () {
-                  Navigator.pushNamed(context, NEW_ALERT_ROUTE);
+                  Navigator.popAndPushNamed(context, NEW_ALERT_ROUTE);
                 }
               :
               //if on "Categories" tab move to add new category

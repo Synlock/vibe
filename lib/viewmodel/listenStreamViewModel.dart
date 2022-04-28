@@ -10,6 +10,8 @@ import 'package:vibe/model/soundListModel.dart';
 import 'package:vibe/view/alertBannerView.dart';
 import 'package:vibe/view/dataTaggingPopupView.dart';
 
+SoundStreamer soundStreamer = SoundStreamer();
+
 class SoundStreamController {
   final RecorderStream recorder = RecorderStream();
 
@@ -49,73 +51,77 @@ class SoundStreamController {
   }
 }
 
-SoundStreamController stream = SoundStreamController();
+class SoundStreamer {
+  SoundStreamController stream = SoundStreamController();
 
-Timer timer = Timer(Duration.zero, () {});
+  Timer timer = Timer(Duration.zero, () {});
 
-List<List<List<int>>> cachedSamples = [];
+  List<List<List<int>>> cachedSamples = [];
 
-void initSoundStream() async {
-  await stream.initPlugin();
+  void initSoundStream() async {
+    if (stream.isRecording) return;
 
-  final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
-  if (json[IS_SILENT]) return;
+    await stream.initPlugin();
 
-  streamRecorderController();
-}
+    final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
+    if (json[IS_SILENT]) return;
 
-void streamRecorderController() async {
-  await stream.recorder.start();
-  timer = Timer.periodic(
-    const Duration(milliseconds: 500),
-    (timer) {
-      if (!stream.isRecording) timer.cancel();
-      //24 * 500 ms equals 12 seconds
-      if (cachedSamples.length >= 24) {
-        cachedSamples.removeAt(0);
-        cachedSamples.add(stream.fourSecChunks);
-        return;
-      }
-
-      cachedSamples.add(stream.fourSecChunks);
-    },
-  );
-}
-
-void stopRecorders() async {
-  await stream.recorder.stop();
-}
-
-void getAlgorithmAnswer(BuildContext context, AlertData alertData,
-    String answer, List<List<int>> audioClip) {
-  if (answer == "0") {
-    cachedSamples.remove(audioClip);
-    return;
+    streamRecorderController();
   }
-  try {
-    for (var item in PredefinedAlertTags.predefinedAlertTags) {
-      if (answer == item) {
-        alertData.alertBehavior.isFullPage
-            ? Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AlertBanner(
-                          alert: AlertData(
-                            alertId: alertData.alertId,
-                            alertName: alertData.alertName,
-                            alertCategory: alertData.alertCategory,
-                            alertIcon: alertData.alertIcon,
-                            alertDuration: 0,
-                            alertPath: alertData.alertPath,
-                            alertBehavior: alertData.alertBehavior,
-                          ),
-                        )),
-              )
-            : showAlertBox(context, alertData);
-      }
+
+  void streamRecorderController() async {
+    await stream.recorder.start();
+    timer = Timer.periodic(
+      const Duration(milliseconds: 500),
+      (timer) {
+        if (!stream.isRecording) timer.cancel();
+        //24 * 500 ms equals 12 seconds
+        if (cachedSamples.length >= 24) {
+          cachedSamples.removeAt(0);
+          cachedSamples.add(stream.fourSecChunks);
+          return;
+        }
+
+        cachedSamples.add(stream.fourSecChunks);
+      },
+    );
+  }
+
+  void stopRecorder() async {
+    await stream.recorder.stop();
+  }
+
+  void getAlgorithmAnswer(BuildContext context, AlertData alertData,
+      String answer, List<List<int>> audioClip) {
+    if (answer == "0") {
+      cachedSamples.remove(audioClip);
+      return;
     }
-  } catch (e) {
-    print(e);
+    try {
+      for (var item in PredefinedAlertTags.predefinedAlertTags) {
+        if (answer == item) {
+          alertData.alertBehavior.isFullPage
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AlertBanner(
+                            alert: AlertData(
+                              alertId: alertData.alertId,
+                              alertName: alertData.alertName,
+                              alertCategory: alertData.alertCategory,
+                              alertIcon: alertData.alertIcon,
+                              alertDuration: 0,
+                              alertPath: alertData.alertPath,
+                              alertBehavior: alertData.alertBehavior,
+                            ),
+                          )),
+                )
+              : showAlertBox(context, alertData);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
 

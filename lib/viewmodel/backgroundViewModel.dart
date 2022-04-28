@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:vibe/viewmodel/alertBehaviorViewModel.dart';
+import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 
 Future<void> initializeService() async {
@@ -36,13 +37,17 @@ Future<void> initializeService() async {
 bool onIosBackground(ServiceInstance service) {
   WidgetsFlutterBinding.ensureInitialized();
   print('FLUTTER BACKGROUND FETCH');
-  //TODO: run soundstream here
+  SoundStreamer soundStreamer = SoundStreamer();
+
+  soundStreamer.initSoundStream();
 
   return true;
 }
 
 void onStart(ServiceInstance service) async {
   bool isActive = false;
+  SoundStreamer soundStreamer = SoundStreamer();
+
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
@@ -51,6 +56,10 @@ void onStart(ServiceInstance service) async {
     service.on('setAsBackground').listen((event) {
       service.setAsBackgroundService();
     });
+
+    if (!soundStreamer.stream.isRecording) {
+      soundStreamer.initSoundStream();
+    }
   }
 
   service.on('stopService').listen((event) {
@@ -61,8 +70,11 @@ void onStart(ServiceInstance service) async {
     isActive = false;
   });
 
-  //TODO: run soundstream here
-  //initSoundStream();
+  service.on("initSoundStreamer").listen((event) {
+    soundStreamer.initSoundStream();
+  });
+
+  service.invoke("initSoundStreamer");
 
   // bring to foreground
   Timer.periodic(
@@ -71,23 +83,23 @@ void onStart(ServiceInstance service) async {
       if (service is AndroidServiceInstance) {
         await service.setForegroundNotificationInfo(
           title: "Listening for registered sounds",
-          content: timer.tick.toString(),
+          //content: "${timer.tick.toString()} Seconds",
+          content: soundStreamer.stream.micChunks.length.toString(),
         );
       }
     },
   );
-  Timer.periodic(const Duration(seconds: 30), (timer) async {
+  Timer.periodic(const Duration(minutes: 30), (timer) async {
     isActive = true;
     createCancelAlertNotification("Alert Name");
     vibrateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!isActive) timer.cancel();
-      print("vibrate");
+
       vibrateUntilCanceled();
     });
 
     flashTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!isActive) timer.cancel();
-      print("flash");
 
       flashUntilCancelled();
     });
