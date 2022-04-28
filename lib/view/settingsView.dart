@@ -8,7 +8,6 @@ import 'package:vibe/styles/styles.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/viewmodel/initApplicationViewModel.dart';
-import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -64,15 +63,15 @@ class _SettingsState extends State<Settings> {
   void setIsSilent(bool value) async {
     bool isBgServiceRunning = await service.isRunning();
     if (!isSilent) {
-      soundStreamer.stopRecorder();
+      service.invoke("stopRecorder");
       if (isBgServiceRunning) {
-        service.invoke("stopService");
+        //service.invoke("stopService");
       }
       setState(() {
         isSilent = true;
       });
     } else {
-      soundStreamer.streamRecorderController();
+      service.invoke("streamRecorderController");
       if (!isBgServiceRunning) {
         await service.startService();
       }

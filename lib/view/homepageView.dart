@@ -34,7 +34,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
       if (json[IS_SILENT]) {
         if (await FlutterBackgroundService().isRunning()) {
-          FlutterBackgroundService().invoke("stopService");
+          //FlutterBackgroundService().invoke("stopService");
         }
         return;
       }

@@ -10,7 +10,7 @@ import 'package:vibe/model/soundListModel.dart';
 import 'package:vibe/view/alertBannerView.dart';
 import 'package:vibe/view/dataTaggingPopupView.dart';
 
-SoundStreamer soundStreamer = SoundStreamer();
+//SoundStreamer soundStreamer = SoundStreamer();
 
 class SoundStreamController {
   final RecorderStream recorder = RecorderStream();
@@ -53,9 +53,6 @@ class SoundStreamController {
 
 class SoundStreamer {
   SoundStreamController stream = SoundStreamController();
-
-  Timer timer = Timer(Duration.zero, () {});
-
   List<List<List<int>>> cachedSamples = [];
 
   void initSoundStream() async {
@@ -71,7 +68,8 @@ class SoundStreamer {
 
   void streamRecorderController() async {
     await stream.recorder.start();
-    timer = Timer.periodic(
+
+    Timer.periodic(
       const Duration(milliseconds: 500),
       (timer) {
         if (!stream.isRecording) timer.cancel();

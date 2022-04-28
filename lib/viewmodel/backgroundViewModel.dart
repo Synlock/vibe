@@ -39,7 +39,9 @@ bool onIosBackground(ServiceInstance service) {
   print('FLUTTER BACKGROUND FETCH');
   SoundStreamer soundStreamer = SoundStreamer();
 
-  soundStreamer.initSoundStream();
+  if (!soundStreamer.stream.isRecording) {
+    soundStreamer.initSoundStream();
+  }
 
   return true;
 }
@@ -56,10 +58,9 @@ void onStart(ServiceInstance service) async {
     service.on('setAsBackground').listen((event) {
       service.setAsBackgroundService();
     });
-
-    if (!soundStreamer.stream.isRecording) {
-      soundStreamer.initSoundStream();
-    }
+    // if (!soundStreamer.stream.isRecording) {
+    //   soundStreamer.initSoundStream();
+    // }
   }
 
   service.on('stopService').listen((event) {
@@ -74,7 +75,12 @@ void onStart(ServiceInstance service) async {
     soundStreamer.initSoundStream();
   });
 
-  service.invoke("initSoundStreamer");
+  service.on("stopRecorder").listen((event) {
+    soundStreamer.stopRecorder();
+  });
+  service.on("streamRecorderController").listen((event) {
+    soundStreamer.streamRecorderController();
+  });
 
   // bring to foreground
   Timer.periodic(

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:record/record.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -15,7 +16,6 @@ import 'package:vibe/view/saveNewAlertPopupView.dart';
 import 'package:vibe/styles/styles.dart';
 import 'package:vibe/viewmodel/audioRecorderViewModel.dart';
 import 'package:vibe/viewmodel/initApplicationViewModel.dart';
-import 'package:vibe/viewmodel/listenStreamViewModel.dart';
 import 'package:vibe/viewmodel/popupViewModel.dart';
 import 'package:vibe/viewmodel/savedAlertsViewModel.dart';
 
@@ -110,7 +110,9 @@ class _AddNewAlertState extends State<AddNewAlert> {
 
     //if user settings not set to off start listening to mic after finish recording
     final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
-    if (!json[IS_SILENT]) await soundStreamer.stream.recorder.start();
+    if (!json[IS_SILENT]) {
+      FlutterBackgroundService().invoke("streamRecorderController");
+    }
 
     if (!getIsRecording()) return;
 
@@ -230,7 +232,8 @@ class _RecorderWidgetState extends State<RecorderWidget> {
                   splashColor: Colors.transparent,
                   onPressed: () async {
                     setIsRecording(!getIsRecording());
-                    await soundStreamer.stream.recorder.stop();
+                    //await soundStreamer.stream.recorder.stop();
+                    FlutterBackgroundService().invoke("stopRecorder");
                     setState(() {
                       if (getIsRecording()) {
                         startRecord(widget.stopWatchTimer, widget.record);
