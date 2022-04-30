@@ -127,6 +127,13 @@ class _SettingsState extends State<Settings> {
     await updateSettingsBools(IS_SYNC, isSync);
   }
 
+  String checkIfMinIsZero() {
+    if (min == 0) {
+      return "00";
+    }
+    return min.toString();
+  }
+
   // void setIsSaveHistory(bool value) async{
   //   if (!isSaveHistory) {
   //     setState(() {
@@ -206,7 +213,7 @@ class _SettingsState extends State<Settings> {
                   divider(),
                   toggleButton(
                     SILENCE_FROM_TIME,
-                    "$hour:$min",
+                    "$hour:" + checkIfMinIsZero(),
                     isSilentFrom,
                     setIsSilenceFrom,
                     alertButtonTextStyle()!,

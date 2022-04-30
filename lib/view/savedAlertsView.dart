@@ -38,7 +38,7 @@ class _SavedAlertsState extends State<SavedAlerts>
     //remove and add the buttons to properly show the updated buttons from the content
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
-      print(json);
+      print("${json.length} alerts in list");
       removeButtonsFromPage(alertBtns, setState(() {}));
       addAlertsToPage(alertBtns, setState(() {}));
 
@@ -83,12 +83,12 @@ class _SavedAlertsState extends State<SavedAlerts>
         child: FloatingActionButton(
           onPressed: _selectedIndex == 1
               ?
-              //if on "All" Tab move to add new alert
+              //if on "All" tab, move to add new alert
               () {
                   Navigator.popAndPushNamed(context, NEW_ALERT_ROUTE);
                 }
               :
-              //if on "Categories" tab move to add new category
+              //if on "Categories" tab, move to add new category
               () {
                   showAddCategoryBox();
                 },

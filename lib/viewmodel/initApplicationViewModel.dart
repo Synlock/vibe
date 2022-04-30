@@ -34,6 +34,7 @@ class _InitApplicationState extends State<InitApplication> {
     super.initState();
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       widget.animationController.stop();
+      widget.animationController.forward();
 
       approvedPermissions = await getPermissions();
       try {
@@ -53,17 +54,16 @@ class _InitApplicationState extends State<InitApplication> {
       if (approvedPermissions && connectedDB) {
         approved = true;
       }
-      //if (approved) {
-      widget.animationController.forward();
-      Timer(const Duration(seconds: 2), () {
+
+      final File alertsJsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+      String fileContents = await alertsJsonFile.readAsString();
+      if (fileContents == "{}") initAlerts();
+
+      await populateAlertsList();
+
+      if (approved) {
         Navigator.of(context).popAndPushNamed(HOME_ROUTE);
-      });
-      //}
-
-      Directory recordingsDir = Directory(getPathToRecordings());
-      if (recordingsDir.listSync().isEmpty) return;
-
-      await populateAlertsList("temp");
+      }
     });
   }
 
@@ -143,7 +143,7 @@ Future<bool> setRecordingsDirectory() async {
 Future<List<CategoryData>> initCategoryList() async {
   final File categoryJsonFile = await getJsonFile(CATEGORY_JSON_FILE_NAME);
   String fileContents = await categoryJsonFile.readAsString();
-  if (fileContents == "" || fileContents == "[]") {
+  if (fileContents == "" || fileContents == "{}") {
     getCategories()!.add(CategoryData(
       categoryName: DEFAULT,
       categoryIcon: getCategoryIcons[0].codePoint,
@@ -197,7 +197,7 @@ Future<void> initUserSettings() async {
       isDoNotDisturb: false,
       isSync: false);
 
-  if (fileContents == "" || fileContents == "[]") {
+  if (fileContents == "" || fileContents == "{}") {
     try {
       await encodeJson(
         settingsJsonFile,
@@ -227,8 +227,6 @@ Future<void> initUserSettings() async {
       print(e);
     }
   }
-  final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
-  print(json);
 }
 
 void permissionRecursion() {}

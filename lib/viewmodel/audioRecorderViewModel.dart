@@ -101,12 +101,13 @@ void startRecord(StopWatchTimer stopWatchTimer, Record record) {
   } catch (e) {
     print(e);
   }
+  int finalNumber = numberOfFiles + INITIAL_DEFAULT_ALERTS;
   //Resets Timer and then starts from 0
   executeStopWatch(stopWatchTimer, StopWatchExecute.reset);
   executeStopWatch(stopWatchTimer, StopWatchExecute.start);
 
   //Saves new recording
-  saveAudio(record, "${numberOfFiles.toString()}.wav");
+  saveAudio(record, "$finalNumber.wav");
 
   //Recorder button turns into square
   setRecordButtonColor(Colors.black);

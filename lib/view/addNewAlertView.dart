@@ -288,9 +288,8 @@ class _RecorderWaveformState extends State<RecorderWaveform> {
       amp = await widget.record.getAmplitude();
 
       setState(() {
-        waveHeight = amp.current == double.negativeInfinity
-            ? 0
-            : lerpDouble(200, 0, amp.current.abs() / 60)!;
+        waveHeight =
+            amp.current <= 0 ? 0 : lerpDouble(200, 0, amp.current.abs() / 60)!;
       });
     });
   }

@@ -1,12 +1,12 @@
 import 'package:vibe/misc/tags.dart';
 
 class UserSettings {
-  bool isSilent;
-  bool isSilentFrom;
-  int timeToSilenceHour;
-  int timeToSilenceMinute;
-  bool isDoNotDisturb;
-  bool isSync;
+  bool isSilent = false;
+  bool isSilentFrom = true;
+  int timeToSilenceHour = 23;
+  int timeToSilenceMinute = 0;
+  bool isDoNotDisturb = false;
+  bool isSync = false;
 
   UserSettings({
     required this.isSilent,

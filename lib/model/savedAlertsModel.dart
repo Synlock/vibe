@@ -75,11 +75,11 @@ class CategoryData {
 }
 
 class AlertBehavior {
-  bool isFullPage;
-  bool isSound;
-  bool isVibrate;
-  bool isFlash;
-  bool isSilent;
+  bool isFullPage = false;
+  bool isSound = false;
+  bool isVibrate = true;
+  bool isFlash = true;
+  bool isSilent = false;
 
   AlertBehavior({
     required this.isFullPage,

@@ -17,19 +17,165 @@ List<AlertData>? getAlerts() => alerts;
 List<CategoryData>? getCategories() => categories;
 List<AlertBehavior>? getAlertBehaviors() => alertBehaviors;
 
+void initAlerts() async {
+  getAlerts()!.addAll([
+    AlertData(
+      alertId: 0,
+      alertName: RED_ALERT,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 1,
+      alertName: SHOOTING,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 2,
+      alertName: SIREN,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 3,
+      alertName: DOORBELL,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 4,
+      alertName: LOUD_SOUND,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 5,
+      alertName: MICROWAVE,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 6,
+      alertName: WASHING_MACHINE,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+    AlertData(
+      alertId: 7,
+      alertName: DOOR_KNOCK,
+      alertCategory: EMERGENCY_CATEGORY_UI,
+      alertIcon: getAlertIcons[2].codePoint,
+      alertDuration: 0,
+      alertPath: "",
+      alertBehavior: AlertBehavior(
+        isFullPage: false,
+        isSound: false,
+        isVibrate: true,
+        isFlash: true,
+        isSilent: false,
+      ),
+    ),
+  ]);
+  final File jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
+  final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
+  await encodeJson(
+      jsonFile, getAlerts()!.map((e) => e.toJson()).toList(), FileMode.write);
+}
+
 int alertIndex = 0;
-Future<bool> populateAlertsList(String? path) async {
+Future<bool> populateAlertsList() async {
   try {
     final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
 
-    Directory directory = Directory(getPathToRecordings());
-
-    FileSystemEntity fileInDirectory = File("");
-    for (var i = alertIndex; i < directory.listSync().length; i++) {
-      fileInDirectory = directory.listSync()[i];
-      if (fileInDirectory.path == path) break;
-
+    for (var i = 0; i < INITIAL_DEFAULT_ALERTS; i++) {
       final item = json[i];
+      final alertBehavior = item[ALERT_BEHAVIOR];
+      getAlerts()!.add(
+        AlertData(
+          alertId: item[ALERT_ID],
+          alertName: item[ALERT_NAME],
+          alertCategory: item[ALERT_CATEGORY],
+          alertIcon: item[ALERT_ICON],
+          alertDuration: 0, //item[ALERT_DURATION],
+          alertPath: item[ALERT_PATH],
+          alertBehavior: AlertBehavior(
+            isFullPage: alertBehavior[IS_FULL_PAGE],
+            isSound: alertBehavior[IS_SOUND],
+            isVibrate: alertBehavior[IS_VIBRATE],
+            isFlash: alertBehavior[IS_FLASH],
+            isSilent: alertBehavior[IS_SILENT],
+          ),
+        ),
+      );
+    }
+
+    Directory directory = Directory(getPathToRecordings());
+    for (var i = alertIndex; i < directory.listSync().length; i++) {
+      final item = json[i + INITIAL_DEFAULT_ALERTS];
       final alertBehavior = item[ALERT_BEHAVIOR];
       getAlerts()!.add(AlertData(
         alertId: item[ALERT_ID],
@@ -80,11 +226,8 @@ Future<void> setAlertData(
       recordingsDirectory,
       alertToChange.alertName);
 
-  //TODO: fix from firstWhere directly to path
-  alertToChange.alertPath = recordingsDirectory
-      .listSync()
-      .firstWhere((element) => element.path.contains(alertToChange.alertName))
-      .path;
+  alertToChange.alertPath =
+      "${recordingsDirectory.path}/${alertToChange.alertName}.wav";
 
   setAlertBehaviorToDefault(alertToChange);
 

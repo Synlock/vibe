@@ -38,7 +38,6 @@ class _ConfirmDeleteAlertBoxState extends State<ConfirmDeleteAlertBox> {
         textAlign: TextAlign.right,
       ),
       actions: <Widget>[
-        //Save Button
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -54,12 +53,17 @@ class _ConfirmDeleteAlertBoxState extends State<ConfirmDeleteAlertBox> {
                 final jsonFile = await getJsonFile(ALERTS_JSON_FILE_NAME);
                 final json = await getDecodedJson(ALERTS_JSON_FILE_NAME);
 
-                deleteAlertFile(recordingsDirectory, widget.alertName);
+                bool canDelete = await deleteAlertFile(
+                    recordingsDirectory, widget.alertName);
 
-                getAlerts()!.removeAt(widget.alertId);
-
-                json[widget.alertId] = "";
-                await encodeJson(jsonFile, json, FileMode.write);
+                if (canDelete) {
+                  getAlerts()!.removeWhere(
+                      (element) => element.alertId == widget.alertId);
+                  await encodeJson(
+                      jsonFile,
+                      getAlerts()!.map((e) => e.toJson()).toList(),
+                      FileMode.write);
+                }
 
                 Navigator.pop(context);
                 Navigator.pop(context);

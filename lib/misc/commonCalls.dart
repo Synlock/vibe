@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vibe/model/soundListModel.dart';
 
 VoidCallback handleNewRoute(BuildContext context, Widget pageToRouteTo) {
   return (() {
@@ -59,10 +60,9 @@ Future<File> getJsonFile(String fileName) async {
 
   File jsonFile = File("${mainDir!.path}/$fileName");
 
-  //TODO: need to call this on application start
   if (!await jsonFile.exists()) {
     await jsonFile.create();
-    await jsonFile.writeAsString("");
+    await jsonFile.writeAsString("{}");
   }
 
   return jsonFile;
@@ -94,12 +94,17 @@ Future<void> renameAlertFile(String oldFilePath, Directory recordingsDirectory,
   }
 }
 
-Future<void> deleteAlertFile(
+Future<bool> deleteAlertFile(
     Directory recordingsDirectory, String fileName) async {
-  File f = File("${recordingsDirectory.path}/$fileName.wav");
+  for (String item in PredefinedAlertTags.predefinedAlertTags) {
+    if (fileName == item) return false;
+  }
+
+  File alertFile = File("${recordingsDirectory.path}/$fileName.wav");
   try {
-    await f.delete();
+    await alertFile.delete();
   } catch (e) {
     print(e);
   }
+  return true;
 }
