@@ -95,7 +95,7 @@ void onStart(ServiceInstance service) async {
       }
     },
   );
-  Timer.periodic(const Duration(minutes: 30), (timer) async {
+  Timer.periodic(const Duration(minutes: 90), (timer) async {
     isActive = true;
     createCancelAlertNotification("Alert Name");
     vibrateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
