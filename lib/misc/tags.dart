@@ -151,6 +151,26 @@ const String CRYING = "בכי";
 const String SHOUTING = "צעקות";
 const String CALL_BY_NAME = "קריאה בשם";
 
+//Predefined Sounds Strings To Python
+const String RED_ALERT_PYTHON = "red_alert";
+const String SHOOTING_PYTHON = "shooting";
+const String SIREN_PYTHON = "siren";
+const String DOORBELL_PYTHON = "doorbell";
+const String LOUD_SOUND_PYTHON = "loud_sound";
+const String MICROWAVE_PYTHON = "microwave";
+const String WASHING_MACHINE_PYTHON = "washing_machine";
+const String DOOR_KNOCK_PYTHON = "door_knock";
+const String GLASS_BREAKING_PYTHON = "glass_breaking";
+const String ITEM_FALL_PYTHON = "item_falling";
+const String DOOR_SLAMMING_PYTHON = "door_slamming";
+const String DRYER_PYTHON = "dryer";
+const String DOG_BARKING_PYTHON = "dog_barking";
+const String BABY_CRYING_PYTHON = "baby_crying";
+const String WATER_RUNNING_PYTHON = "water_running";
+const String CRYING_PYTHON = "crying";
+const String SHOUTING_PYTHON = "shouting";
+const String CALL_BY_NAME_PYTHON = "name_call";
+
 //Push Notifications
 const String CANCEL_ALERT_CHANNEL_KEY = "cancel_channel";
 const String CANCEL_ALERT_CHANNEL_NAME = "Cancel alert notifications";

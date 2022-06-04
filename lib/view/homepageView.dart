@@ -12,6 +12,7 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
+import 'package:vibe/viewmodel/algorithmCommunicator.ViewModel.dart';
 import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 
 class Homepage extends StatefulWidget {
@@ -100,15 +101,13 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             ),
           ],
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (builder) => const Homepage()));
-        //   },
-        //   child: const Text("Cancel"),
-        // ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => PythonCommunicator()));
+          },
+          child: const Text("Cancel"),
+        ),
       ),
     );
   }

@@ -7,3 +7,21 @@
 //TODO: after one minute ask user if the detection was correct
 //TODO: send back data to db when internet is active
 
+import 'package:flutter/material.dart';
+
+class PythonCommunicator extends StatefulWidget {
+  PythonCommunicator({Key? key}) : super(key: key);
+
+  @override
+  State<PythonCommunicator> createState() => _PythonCommunicatorState();
+}
+
+class _PythonCommunicatorState extends State<PythonCommunicator> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [],
+    );
+  }
+}

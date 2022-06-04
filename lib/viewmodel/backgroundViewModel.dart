@@ -87,11 +87,11 @@ void onStart(ServiceInstance service) async {
     const Duration(seconds: 1),
     (timer) async {
       if (service is AndroidServiceInstance) {
-        await service.setForegroundNotificationInfo(
-          title: "Listening for registered sounds",
-          //content: "${timer.tick.toString()} Seconds",
-          content: soundStreamer.stream.micChunks.length.toString(),
-        );
+        // await service.setForegroundNotificationInfo(
+        //   title: "Listening for registered sounds",
+        //   //content: "${timer.tick.toString()} Seconds",
+        //   content: soundStreamer.stream.micChunks.length.toString(),
+        // );
       }
     },
   );
