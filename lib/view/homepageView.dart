@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:move_to_background/move_to_background.dart';
+import 'package:vibe/DB/mongo.dart';
 import 'package:vibe/misc/commonCalls.dart';
 import 'package:vibe/styles/buttons.dart';
 import 'package:vibe/misc/tags.dart';
@@ -12,8 +13,10 @@ import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
-import 'package:vibe/viewmodel/algorithmCommunicator.ViewModel.dart';
+import 'package:vibe/viewmodel/alertBehaviorViewModel.dart';
 import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
+
+bool isActive = true;
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -23,13 +26,43 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
+  String alertName = DOORBELL;
+  IconData alertIcon = Icons.door_back_door_outlined;
+
   IconData icon = Icons.square_rounded;
   Color iconColor = Colors.black;
+
+  bool isSendNotification = false;
   @override
   void initState() {
     super.initState();
 
-    initNotificationActions(context);
+    initNotificationActions(context, alertName, alertIcon);
+
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      Mongo.dataTaggingCollection.find().forEach((v) async {
+        if (v.toString() != '{_id: 1, start: true}') return;
+        isSendNotification = true;
+
+        if (isSendNotification) {
+          createDetectNotification(DOORBELL);
+          isActive = true;
+        }
+
+        isSendNotification = false;
+
+        Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (!isActive) timer.cancel();
+          vibrateUntilCancelled();
+        });
+        Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (!isActive) timer.cancel();
+          flashUntilCancelled();
+        });
+
+        Mongo.dataTaggingCollection.update({"_id": 1}, {"start": false});
+      });
+    });
 
     WidgetsBinding.instance?.addPostFrameCallback((_) async {
       final json = await getDecodedJson(SETTINGS_JSON_FILE_NAME);
@@ -101,13 +134,26 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => PythonCommunicator()));
-          },
-          child: const Text("Cancel"),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     //Mongo.dataTaggingCollection.update({"_id": 1}, {"start": true});
+        //     // find().forEach((v) async {
+        //     //   print(v);
+        //     //   if (v.toString() == '{_id: 1, start: false}') {
+        //     //     //Mongo.dataTaggingCollection.remove({});
+        //     //     await Mongo.dataTaggingCollection.insertMany([
+        //     //       {
+        //     //         "_id": 1,
+        //     //         "start": true,
+        //     //       }
+        //     //     ]);
+        //     //   }
+        //     // });
+        //     // Navigator.push(context,
+        //     //     MaterialPageRoute(builder: (builder) => PythonCommunicator()));
+        //   },
+        //   child: const Text("Cancel"),
+        // ),
       ),
     );
   }

@@ -142,14 +142,15 @@ void showAlertBox(BuildContext context, AlertData alertData) async {
       });
 }
 
-void showDataTaggingBox(BuildContext context) async {
+void showDataTaggingBox(
+    BuildContext context, String alertName, IconData alertIcon) async {
   var navigationResult = await showDialog(
     barrierDismissible: false,
     context: context,
     builder: (context) {
-      return const DataTaggingPopup(
-        alertIcon: Icons.access_alarm,
-        alertName: "Alarm",
+      return DataTaggingPopup(
+        alertIcon: alertIcon,
+        alertName: alertName,
       );
     },
   );

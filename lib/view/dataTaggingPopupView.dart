@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:vibe/DB/mongo.dart';
 import 'package:vibe/misc/tags.dart';
 import 'package:vibe/model/dataTaggingModel.dart';
 import 'package:vibe/styles/buttons.dart';
@@ -24,16 +21,16 @@ class _DataTaggingPopupState extends State<DataTaggingPopup> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(minutes: 10), () {
-      Mongo.addOneToCollection(AlertTaggingData(
-        userId: 0,
-        audioClip: <List<int>>[],
-        clipLabel: widget.alertName,
-        response: dataTagging.noAnswer.index,
-        timeStamp: DateTime.now(),
-      ).toJson());
-      Navigator.pop(context);
-    });
+    // Timer(const Duration(minutes: 10), () {
+    //   Mongo.addOneToCollection(AlertTaggingData(
+    //     userId: 0,
+    //     audioClip: <List<int>>[],
+    //     clipLabel: widget.alertName,
+    //     response: dataTagging.noAnswer.index,
+    //     timeStamp: DateTime.now(),
+    //   ).toJson());
+    //   Navigator.pop(context);
+    // });
   }
 
   @override
@@ -81,7 +78,7 @@ class _DataTaggingPopupState extends State<DataTaggingPopup> {
                 }, "No"),
               ),
               roundedButton(() {
-                Mongo.addOneToCollection(convertToJson());
+                //Mongo.addOneToCollection(convertToJson());
 
                 Navigator.pop(context);
               }, "Not Sure"),

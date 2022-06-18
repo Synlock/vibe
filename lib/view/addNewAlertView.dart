@@ -286,10 +286,8 @@ class _RecorderWaveformState extends State<RecorderWaveform> {
         Timer.periodic(const Duration(milliseconds: 200), (Timer t) async {
       if (!await widget.record.isRecording()) return;
       amp = await widget.record.getAmplitude();
-
       setState(() {
-        waveHeight =
-            amp.current <= 0 ? 0 : lerpDouble(200, 0, amp.current.abs() / 60)!;
+        waveHeight = lerpDouble(200, 0, amp.current.abs() / 60)!;
       });
     });
   }

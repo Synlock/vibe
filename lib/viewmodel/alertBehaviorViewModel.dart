@@ -28,7 +28,7 @@ Future<void> alertBehaviorHandler(
         Timer.periodic(Duration(seconds: pauseBetweenInSecs), (timer) {
       if (!isActive) timer.cancel();
       print("vibrate");
-      vibrateUntilCanceled();
+      vibrateUntilCancelled();
     });
   }
   if (alertBehavior.isFlash) {
@@ -56,7 +56,7 @@ void playSoundUntilCancelled(AudioPlayer audioPlayer) async {
 }
 
 int count = 0;
-void vibrateUntilCanceled() async {
+void vibrateUntilCancelled() async {
   if (await Vibration.hasCustomVibrationsSupport()) {
     await Future.delayed(const Duration(milliseconds: 2000), () async {
       await Vibration.vibrate(duration: 1000);

@@ -3,9 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
-import 'package:vibe/viewmodel/alertBehaviorViewModel.dart';
 import 'package:vibe/viewmodel/listenStreamViewModel.dart';
-import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
@@ -87,27 +85,27 @@ void onStart(ServiceInstance service) async {
     const Duration(seconds: 1),
     (timer) async {
       if (service is AndroidServiceInstance) {
-        // await service.setForegroundNotificationInfo(
-        //   title: "Listening for registered sounds",
-        //   //content: "${timer.tick.toString()} Seconds",
-        //   content: soundStreamer.stream.micChunks.length.toString(),
-        // );
+        await service.setForegroundNotificationInfo(
+          title: "Listening for registered sounds",
+          content: "${timer.tick.toString()} Seconds",
+          //content: soundStreamer.stream.micChunks.length.toString(),
+        );
       }
     },
   );
-  Timer.periodic(const Duration(minutes: 90), (timer) async {
-    isActive = true;
-    createCancelAlertNotification("Alert Name");
-    vibrateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isActive) timer.cancel();
+  // Timer.periodic(const Duration(minutes: 90), (timer) async {
+  //   isActive = true;
+  //   createCancelAlertNotification("Alert Name");
+  //   vibrateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     if (!isActive) timer.cancel();
 
-      vibrateUntilCanceled();
-    });
+  //     vibrateUntilCanceled();
+  //   });
 
-    flashTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isActive) timer.cancel();
+  //   flashTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     if (!isActive) timer.cancel();
 
-      flashUntilCancelled();
-    });
-  });
+  //     flashUntilCancelled();
+  //   });
+  // });
 }

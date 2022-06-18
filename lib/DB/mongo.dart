@@ -29,4 +29,8 @@ class Mongo {
   static getDataTaggingCollection() async {
     return await dataTaggingCollection;
   }
+
+  static removeAllFromCollection() {
+    dataTaggingCollection.remove({});
+  }
 }
