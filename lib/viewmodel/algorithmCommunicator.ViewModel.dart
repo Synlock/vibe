@@ -6,102 +6,78 @@
 //TODO: show alert banner/popup with alert info
 //TODO: after one minute ask user if the detection was correct
 //TODO: send back data to db when internet is active
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vibe/styles/appBar.dart';
 import 'package:vibe/styles/styles.dart';
 
-class PythonCommunicator extends StatefulWidget {
-  const PythonCommunicator({Key? key}) : super(key: key);
+class PythonDemo extends StatefulWidget {
+  const PythonDemo({Key? key}) : super(key: key);
 
   @override
-  State<PythonCommunicator> createState() => _PythonCommunicatorState();
+  State<PythonDemo> createState() => _PythonDemoState();
 }
 
-//Future<dynamic> python() async {
-//  final _result = await Chaquopy.executeCode("""
-// import utils
-// from logic import naiveClassifier, smartClassifier, final_decision
-// import sys
-// import json
+class _PythonDemoState extends State<PythonDemo> {
+  Future<String> getDownloadPath() async {
+    Directory? directory;
+    try {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory();
+      } else {
+        directory = Directory('/storage/emulated/0/Download');
+        // Put file in global download folder, if for an unknown reason it didn't exist, we fallback
+        // ignore: avoid_slow_async_io
+        if (!await directory.exists()) {
+          directory = await getExternalStorageDirectory();
+        }
+      }
+    } catch (err) {
+      print("Cannot get download folder path");
+    }
+    return directory!.path;
+  }
 
-// config = json.load(open('config.json'))
+  var urlType = 'https://genial-smoke-358610.oa.r.appspot.com/type';
+  var urlJsonCheck = 'https://genial-smoke-358610.oa.r.appspot.com/json-check';
+  var urlReturnJsonObject =
+      'https://genial-smoke-358610.oa.r.appspot.com/return-json-object';
+  Future<String> getServerResponse() async {
+    Directory directory = Directory(await getDownloadPath());
+    String audioFilePath = directory.path + "/dogBarkSound.wav";
+    dynamic stringedAudio = await File(audioFilePath).readAsBytes();
 
-// naive_classifier = naiveClassifier(config['naive_sampling_rate'])
-// smart_classifier = smartClassifier(config['smart_model_path'])
+    print(stringedAudio);
+    //var req = await http.post(Uri.parse(audioFilePath));
+    var stringData = "";
+    try {
+      var req = await HttpClient().postUrl(Uri.parse(urlJsonCheck));
+      req.write(stringedAudio);
+      var res = await req.close();
 
-// def classify(audio_file):
+      stringData = await res.transform(utf8.decoder).join();
+    } catch (e) {
+      print(e.toString());
+    }
+    return stringData;
+  }
 
-//     #  load and pre-processing
-//     audio_wave = utils.load_audio_file(audio_file)
-
-//     # apply naive logic
-//     naive_classification = naive_classifier.classify(audio_wave)
-
-//     # apply smart logic
-//     smart_classification = smart_classifier.classify(audio_wave)
-
-//     # return the final decision
-//     return final_decision(naive_classification, smart_classification)
-
-// if __name__ == '__main__':
-//     prediction = classify(sys.argv[1])
-//     print(prediction)
-
-// """);
-//   final result = await Chaquopy.executeCode("""
-// import utils
-// from logic import naiveClassifier, smartClassifier, final_decision
-// import sys
-// import json
-
-// config = json.load(open('config.json'))
-// naive_classifier = naiveClassifier(config['naive_sampling_rate'])
-// smart_classifier = smartClassifier(config['smart_model_path'])
-// def classify(audio_file):
-//     #  load and pre-processing
-//     audio_wave = utils.load_audio_file(audio_file)
-//     # apply naive logic
-//     naive_classification = naive_classifier.classify(audio_wave)
-//     # apply smart logic
-//     smart_classification = smart_classifier.classify(audio_wave)
-//     # return the final decision
-//     return final_decision(naive_classification, smart_classification)
-// if __name__ == '__main__':
-//     prediction = classify(sys.argv[1])
-//     print(prediction)
-// """);
-//   print(result.values.first);
-//   return result;
-// }
-
-class _PythonCommunicatorState extends State<PythonCommunicator> {
-  dynamic s = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: mainAppBar(context, "Vibe"),
       backgroundColor: indigoColor,
-      body: Center(
-        child: Column(
-          children: [
-            Text(
-              s.toString(),
-              style: const TextStyle(color: Colors.black, fontSize: 20),
-            ),
-            TextButton(
-              onPressed: () async {
-                const j = ""; //await python();
-                setState(
-                  () {
-                    s = j;
-                  },
-                );
-              },
-              child: const Text("Run Code"),
-            ),
-          ],
-        ),
+      body: const Text(""),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          String a = await getServerResponse();
+          print(a);
+          //send to python server on press here
+        },
+        child: const Text(""),
       ),
     );
   }

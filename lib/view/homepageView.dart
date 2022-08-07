@@ -14,6 +14,7 @@ import 'package:vibe/view/addNewAlertView.dart';
 import 'package:vibe/view/savedAlertsView.dart';
 import 'package:vibe/view/settingsView.dart';
 import 'package:vibe/viewmodel/alertBehaviorViewModel.dart';
+import 'package:vibe/viewmodel/algorithmCommunicator.ViewModel.dart';
 import 'package:vibe/viewmodel/pushNotificationViewModel.dart';
 
 bool isActive = true;
@@ -134,26 +135,26 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             ),
           ],
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     //Mongo.dataTaggingCollection.update({"_id": 1}, {"start": true});
-        //     // find().forEach((v) async {
-        //     //   print(v);
-        //     //   if (v.toString() == '{_id: 1, start: false}') {
-        //     //     //Mongo.dataTaggingCollection.remove({});
-        //     //     await Mongo.dataTaggingCollection.insertMany([
-        //     //       {
-        //     //         "_id": 1,
-        //     //         "start": true,
-        //     //       }
-        //     //     ]);
-        //     //   }
-        //     // });
-        //     // Navigator.push(context,
-        //     //     MaterialPageRoute(builder: (builder) => PythonCommunicator()));
-        //   },
-        //   child: const Text("Cancel"),
-        // ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            //Mongo.dataTaggingCollection.update({"_id": 1}, {"start": true});
+            // find().forEach((v) async {
+            //   print(v);
+            //   if (v.toString() == '{_id: 1, start: false}') {
+            //     //Mongo.dataTaggingCollection.remove({});
+            //     await Mongo.dataTaggingCollection.insertMany([
+            //       {
+            //         "_id": 1,
+            //         "start": true,
+            //       }
+            //     ]);
+            //   }
+            // });
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => const PythonDemo()));
+          },
+          child: const Text(""),
+        ),
       ),
     );
   }
